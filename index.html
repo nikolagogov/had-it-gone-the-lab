@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAD IT GONE: THE LAB</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0b1015;
+  --panel: #141d25;
+  --border: #293744;
+  --text: #edf4f7;
+  --muted: #9cabb7;
+  --accent: #68e0c1;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+}
+header {
+  padding: 28px 20px 22px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.eyebrow {
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 4px;
+  font-weight: 700;
+}
+h1 { margin: 12px 0 5px; font-size: clamp(25px, 5vw, 38px); }
+header p, .muted { color: var(--muted); }
+header p { margin-bottom: 0; }
+main { max-width: 1050px; margin: auto; padding: 24px 16px 50px; }
+h2 { font-size: 17px; }
+.layout {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 18px;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  min-width: 0;
+}
+.elements {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.element {
+  background: #1b2832;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 6px;
+  color: var(--text);
+  cursor: pointer;
+  min-width: 0;
+  transition: 0.15s;
+}
+.element:hover { border-color: var(--accent); transform: translateY(-2px); }
+.element.selected {
+  border: 2px solid var(--accent);
+  background: #203a3a;
+}
+.emoji { font-size: 30px; display: block; margin-bottom: 8px; }
+.element strong { font-size: 13px; display: block; overflow-wrap: anywhere; }
+.element small { display: block; margin-top: 5px; color: var(--muted); }
+button { font: inherit; }
+.primary, .secondary {
+  border-radius: 9px;
+  padding: 11px 15px;
+  cursor: pointer;
+}
+.primary {
+  background: var(--accent);
+  border: 0;
+  color: #071511;
+  font-weight: 800;
+}
+.primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.secondary {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.result {
+  margin-top: 16px;
+  padding: 15px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.result.found { border-color: var(--accent); color: var(--text); }
+.result .emoji { font-size: 38px; }
+.inventory { display: flex; flex-wrap: wrap; gap: 7px; }
+.tag {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.count { color: var(--accent); font-size: 13px; }
+footer { color: var(--muted); text-align: center; font-size: 12px; padding: 0 15px 25px; }
+@media (max-width: 680px) {
+  .layout { grid-template-columns: 1fr; }
+  .elements { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">HAD IT GONE PRESENTS</div>
+  <h1>THE LAB</h1>
+  <p>Combine. Discover. Evolve.</p>
+</header>
+
+<main>
+  <div class="layout">
+    <section class="panel">
+      <h2>01 / Лаборатория</h2>
+      <p class="muted">Избери два елемента, за да ги комбинираш.</p>
+      <div id="elements" class="elements"></div>
+      <div class="actions">
+        <button id="combine" class="primary" disabled>＋ Комбинирай</button>
+        <button id="clear" class="secondary">Изчисти избора</button>
+      </div>
+      <div id="result" class="result" aria-live="polite">
+        Твоето следващо откритие започва тук.
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2>02 / Колекция</h2>
+      <p class="muted">Всички открити елементи се запазват в този браузър.</p>
+      <div class="count" id="count"></div>
+      <div id="inventory" class="inventory" style="margin-top:14px"></div>
+      <div class="actions">
+        <button id="reset" class="secondary">Нова лаборатория</button>
+      </div>
+      <p class="muted" style="font-size:12px;line-height:1.6">
+        В тази версия откритията се съхраняват само на твоето устройство.
+      </p>
+    </aside>
+  </div>
+</main>
+
+<footer>HAD IT GONE: THE LAB · Experimental worlds, unexpected discoveries.</footer>
+
+<script>
+const START = [
+  { id:"water", name:"Вода", emoji:"💧", type:"element", traits:["fluid","life"] },
+  { id:"stone", name:"Камък", emoji:"🪨", type:"material", traits:["solid","mineral"] },
+  { id:"energy", name:"Енергия", emoji:"⚡", type:"force", traits:["power","light"] },
+  { id:"cell", name:"Клетка", emoji:"🦠", type:"life", traits:["life","growth"] }
+];
+
+const RECIPES = {
+  "cell+water": {
+    id:"aquacell", name:"Водна клетка", emoji:"🫧",
+    type:"organism", traits:["life","fluid","growth"],
+    description:"Проста форма на живот, приспособена към водна среда."
+  },
+  "energy+stone": {
+    id:"crystal", name:"Енергиен кристал", emoji:"💎",
+    type:"material", traits:["mineral","power","light"],
+    description:"Кристална структура, която съхранява енергия."
+  },
+  "cell+stone": {
+    id:"mineralcell", name:"Минерална клетка", emoji:"🔬",
+    type:"organism", traits:["life","mineral","solid"],
+    description:"Клетка с твърда минерална обвивка."
+  },
+  "aquacell+energy": {
+    id:"glowlife", name:"Светещ организъм", emoji:"🪼",
+    type:"organism", traits:["life","light","fluid"],
+    description:"Организъм, който използва енергията, за да произвежда светлина."
+  },
+  "crystal+aquacell": {
+    id:"crystallife", name:"Кристално същество", emoji:"🧬",
+    type:"organism", traits:["life","mineral","light","growth"],
+    description:"Необичайна форма на живот с кристална структура."
+  },
+  "energy+water": {
+    id:"plasma", name:"Светеща мъгла", emoji:"🌫️",
+    type:"matter", traits:["fluid","light","power"],
+    description:"Фантастична енергийна субстанция, която се разсейва във въздуха."
+  }
+};
+
+const GENERIC = [
+  { name:"Жив кристал", emoji:"🔮", traits:["life","mineral","growth"] },
+  { name:"Енергиен гел", emoji:"🧪", traits:["fluid","power","growth"] },
+  { name:"Светещ минерал", emoji:"✨", traits:["mineral","light","power"] },
+  { name:"Органична сплав", emoji:"🧬", traits:["life","solid","growth"] },
+  { name:"Пулсираща материя", emoji:"🌀", traits:["power","fluid","growth"] }
+];
+
+const KEY = "hig-lab-v1";
+let selected = [];
+let discovered = [];
+let nextId = 1;
+
+function load() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY));
+    if (saved && Array.isArray(saved.discovered) &&
+        saved.discovered.some(x => x.id === "water")) {
+      discovered = saved.discovered;
+      nextId = Number(saved.nextId) || 1;
+      return;
+    }
+  } catch {}
+  discovered = START.map(x => ({...x, description:"Начален елемент на лабораторията."}));
+  nextId = 1;
+}
+function save() {
+  localStorage.setItem(KEY, JSON.stringify({discovered,nextId}));
+}
+function recipeKey(a,b) {
+  return [a,b].sort().join("+");
+}
+function getItem(id) {
+  return discovered.find(x => x.id === id);
+}
+function render() {
+  const container = document.getElementById("elements");
+  container.innerHTML = "";
+  discovered.forEach(item => {
+    const button = document.createElement("button");
+    button.className = "element" + (selected.includes(item.id) ? " selected" : "");
+    button.setAttribute("aria-pressed", String(selected.includes(item.id)));
+    button.innerHTML =
+      `<span class="emoji">${item.emoji}</span>
+       <strong>${item.name}</strong>
+       <small>${item.type === "organism" ? "Организъм" :
+         item.type === "material" ? "Материал" :
+         item.type === "matter" ? "Материя" :
+         item.type === "force" ? "Енергия" :
+         item.type === "life" ? "Живот" : "Елемент"}</small>`;
+    button.addEventListener("click", () => toggle(item.id));
+    container.appendChild(button);
+  });
+
+  document.getElementById("combine").disabled = selected.length !== 2;
+  document.getElementById("count").textContent =
+    discovered.length + " открития";
+
+  const inventory = document.getElementById("inventory");
+  inventory.innerHTML = "";
+  discovered.forEach(item => {
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = item.emoji + " " + item.name;
+    inventory.appendChild(tag);
+  });
+}
+function toggle(id) {
+  if (selected.includes(id)) {
+    selected = selected.filter(x => x !== id);
+  } else if (selected.length < 2) {
+    selected.push(id);
+  } else {
+    selected = [selected[1], id];
+  }
+  render();
+}
+function showResult(item, isNew) {
+  const box = document.getElementById("result");
+  box.className = "result found";
+  box.replaceChildren();
+
+  const emoji = document.createElement("div");
+  emoji.className = "emoji";
+  emoji.textContent = item.emoji;
+  const title = document.createElement("strong");
+  title.textContent = (isNew ? "Ново откритие: " : "Вече познато: ") + item.name;
+  const description = document.createElement("p");
+  description.textContent = item.description;
+  const traits = document.createElement("small");
+  traits.className = "muted";
+  traits.textContent = "Свойства: " + item.traits.join(" · ");
+
+  box.append(emoji, title, description, traits);
+}
+function combine() {
+  if (selected.length !== 2) return;
+  const [a,b] = selected;
+  if (a === b) {
+    document.getElementById("result").textContent =
+      "Избери два различни елемента.";
+    return;
+  }
+  const key = recipeKey(a,b);
+  const existing = discovered.find(x => x.recipe === key);
+
+  if (existing) {
+    showResult(existing, false);
+    selected = [];
+    render();
+    return;
+  }
+
+  let item = RECIPES[key] ? {...RECIPES[key]} : null;
+
+  if (!item) {
+    const first = getItem(a);
+    const second = getItem(b);
+    const seed = [...key].reduce((n,c) => n + c.charCodeAt(0), 0);
+    const template = GENERIC[seed % GENERIC.length];
+    item = {
+      id: "discovery-" + nextId++,
+      name: template.name,
+      emoji: template.emoji,
+      type: "discovery",
+      traits: [...new Set([...first.traits, ...second.traits, ...template.traits])].slice(0,4),
+      description: `Нова хипотетична комбинация между ${first.name} и ${second.name}. Съчетаването създава необичайна смесица от свойства.`,
+      recipe:key
+    };
+  }
+
+  item.recipe = key;
+  const duplicate = discovered.find(x => x.id === item.id);
+  if (duplicate) {
+    showResult(duplicate, false);
+  } else {
+    discovered.push(item);
+    save();
+    showResult(item, true);
+  }
+  selected = [];
+  render();
+}
+document.getElementById("combine").addEventListener("click", combine);
+document.getElementById("clear").addEventListener("click", () => {
+  selected = [];
+  render();
+});
+document.getElementById("reset").addEventListener("click", () => {
+  if (!confirm("Сигурен ли си? Всички открития в тази лаборатория ще бъдат изтрити.")) return;
+  localStorage.removeItem(KEY);
+  load();
+  selected = [];
+  document.getElementById("result").className = "result";
+  document.getElementById("result").textContent =
+    "Твоето следващо откритие започва тук.";
+  render();
+});
+load();
+render();
+</script>
+</body>
+</html>
