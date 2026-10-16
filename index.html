@@ -258,130 +258,454 @@ main {
 </footer>
 </div>
 
-<script>
-const SAVE_KEY = "hig-lab-v03";
 
-const ITEMS = {
-  water: {name:"Water", icon:"💧", kind:"Primary source", desc:"A renewable source of liquid.", traits:["liquid"]},
-  stone: {name:"Stone", icon:"🪨", kind:"Primary source", desc:"A renewable source of mineral matter.", traits:["mineral","solid"]},
-  sand: {name:"Sand", icon:"🏖️", kind:"Material", desc:"Loose mineral grains, ready for further transformation.", traits:["mineral","granular","solid"]},
-  mud: {name:"Mud", icon:"🟤", kind:"Material", desc:"A mixture of water and fine mineral particles.", traits:["mineral","liquid","granular"]},
-  gravel: {name:"Gravel", icon:"🪨", kind:"Material", desc:"Coarse fragments of mineral matter.", traits:["mineral","granular","solid"]},
-  flint: {name:"Flint", icon:"🔹", kind:"Material", desc:"A hard stone that can produce sparks.", traits:["mineral","solid","spark-capable"]},
-  sparks: {name:"Sparks", icon:"✨", kind:"Energy", desc:"A brief burst of energy produced by flint.", traits:["energy","hot"]},
-  fire: {name:"Fire", icon:"🔥", kind:"Energy", desc:"A source of heat and transformation.", traits:["energy","hot"]},
-  steam: {name:"Steam", icon:"♨️", kind:"Material", desc:"Water transformed by heat.", traits:["gas","hot","water-derived"]},
-  clay: {name:"Clay", icon:"🧱", kind:"Material", desc:"Fine mineral material shaped by water.", traits:["mineral","malleable","solid"]},
-  glass: {name:"Glass", icon:"🔮", kind:"Material", desc:"A fused, glass-like mineral material.", traits:["mineral","solid","transparent"]},
-  mist: {name:"Mist", icon:"🌫️", kind:"Material", desc:"A cloud of fine water droplets.", traits:["liquid","gas","water-derived"]},
-  heatedStone: {name:"Heated Stone", icon:"🌋", kind:"Material", desc:"Mineral matter carrying thermal energy.", traits:["mineral","solid","hot"]},
-  sediment: {name:"Sediment", icon:"🪹", kind:"Material", desc:"A deposit formed from mixed mineral particles.", traits:["mineral","granular","wet"]},
-  compositeMineral: {name:"Composite Mineral", icon:"💠", kind:"Material", desc:"A new mineral structure formed from two materials.", traits:["mineral","solid","structured"]},
-  nutrientSolution: {name:"Nutrient Solution", icon:"🧪", kind:"Compound", desc:"A mixture that can support future biological experiments.", traits:["liquid","nutrient","reactive"]},
-  chargedMineral: {name:"Charged Mineral", icon:"⚡", kind:"Compound", desc:"Mineral matter infused with energy.", traits:["mineral","energy","reactive"]},
-  fertileClay: {name:"Fertile Clay", icon:"🌱", kind:"Compound", desc:"A mineral mixture with properties suitable for growth.", traits:["mineral","nutrient","wet"]},
-  hybridMatter: {name:"Hybrid Matter", icon:"🧬", kind:"Compound", desc:"A stable new material formed by combining unlike components.", traits:["structured","reactive"]}
+<script>
+const SAVE_KEY = "hig-lab-v04";
+
+const BASE_ITEMS = {
+  water: {
+    name:"Water", icon:"💧", kind:"Primary material",
+    desc:"An inexhaustible source of liquid.",
+    traits:["liquid","water-derived"]
+  },
+  stone: {
+    name:"Stone", icon:"🪨", kind:"Primary material",
+    desc:"An inexhaustible source of mineral matter.",
+    traits:["mineral","solid"]
+  },
+  heat: {
+    name:"Heat", icon:"♨️", kind:"Energy",
+    desc:"Thermal energy extracted from a permanent vent.",
+    traits:["energy","hot"]
+  },
+  sand: {
+    name:"Sand", icon:"🏖️", kind:"Material",
+    desc:"Loose mineral grains.",
+    traits:["mineral","granular","solid"]
+  },
+  mud: {
+    name:"Mud", icon:"🟤", kind:"Material",
+    desc:"Water mixed with fine mineral particles.",
+    traits:["mineral","liquid","granular"]
+  },
+  gravel: {
+    name:"Gravel", icon:"🪨", kind:"Material",
+    desc:"Coarse fragments of mineral matter.",
+    traits:["mineral","granular","solid"]
+  },
+  flint: {
+    name:"Flint", icon:"🔹", kind:"Material",
+    desc:"A hard mineral capable of producing sparks.",
+    traits:["mineral","solid","spark-capable"]
+  },
+  sparks: {
+    name:"Sparks", icon:"✨", kind:"Energy",
+    desc:"A burst of energy produced by striking flint.",
+    traits:["energy","hot"]
+  },
+  fire: {
+    name:"Fire", icon:"🔥", kind:"Energy",
+    desc:"A source of heat and transformation.",
+    traits:["energy","hot"]
+  },
+  steam: {
+    name:"Steam", icon:"♨️", kind:"Material",
+    desc:"Water transformed by heat.",
+    traits:["gas","hot","water-derived"]
+  },
+  clay: {
+    name:"Clay", icon:"🧱", kind:"Material",
+    desc:"Fine, malleable mineral matter.",
+    traits:["mineral","malleable","solid"]
+  },
+  glass: {
+    name:"Glass", icon:"🔮", kind:"Material",
+    desc:"Mineral matter transformed by heat.",
+    traits:["mineral","solid","transparent"]
+  },
+  mist: {
+    name:"Mist", icon:"🌫️", kind:"Material",
+    desc:"Fine water droplets suspended in air.",
+    traits:["liquid","gas","water-derived"]
+  },
+  heatedStone: {
+    name:"Heated Stone", icon:"🌋", kind:"Material",
+    desc:"Stone carrying thermal energy.",
+    traits:["mineral","solid","hot"]
+  },
+  sediment: {
+    name:"Sediment", icon:"🪹", kind:"Material",
+    desc:"Deposited mineral particles.",
+    traits:["mineral","granular","wet"]
+  },
+  compositeMineral: {
+    name:"Composite Mineral", icon:"💠", kind:"Material",
+    desc:"A structured combination of mineral materials.",
+    traits:["mineral","solid","structured"]
+  },
+  nutrientSolution: {
+    name:"Nutrient Solution", icon:"🧪", kind:"Compound",
+    desc:"A solution suitable for future experiments.",
+    traits:["liquid","nutrient","reactive"]
+  },
+  chargedMineral: {
+    name:"Charged Mineral", icon:"⚡", kind:"Compound",
+    desc:"Mineral matter infused with energy.",
+    traits:["mineral","energy","reactive"]
+  },
+  fertileClay: {
+    name:"Fertile Clay", icon:"🌱", kind:"Compound",
+    desc:"A mineral medium with growth-supporting properties.",
+    traits:["mineral","nutrient","wet"]
+  },
+  hybridMatter: {
+    name:"Hybrid Matter", icon:"🧬", kind:"Compound",
+    desc:"A stable material with combined properties.",
+    traits:["structured","reactive"]
+  }
 };
 
 const SOURCES = [
-  {id:"water", name:"Water Source", icon:"💧", desc:"Extract a unit of water."},
-  {id:"stone", name:"Stone Source", icon:"🪨", desc:"Extract a unit of stone."},
-  {id:"heat", name:"Thermal Vent", icon:"♨️", desc:"Extract a unit of heat.", unlock:"fire"}
+  {id:"water",name:"Water Source",icon:"💧",desc:"Extract a unit of water."},
+  {id:"stone",name:"Stone Source",icon:"🪨",desc:"Extract a unit of stone."},
+  {id:"heat",name:"Thermal Vent",icon:"♨️",desc:"Extract a unit of heat.",unlock:"fire"}
 ];
 
-const RECIPES = {
-  "stone|water": {out:"sand", why:"Water and stone produce loose mineral grains in this simplified world."},
-  "stone|stone": {out:"flint", why:"Two stones form a flint-like material."},
-  "flint|stone": {out:"sparks", why:"Striking flint against stone produces sparks."},
-  "sand|sparks": {out:"fire", why:"Sparks ignite the available mineral dust in this experimental world."},
-  "fire|water": {out:"steam", why:"Heat transforms water into steam."},
-  "sand|water": {out:"mud", why:"Water binds loose mineral grains into mud."},
-  "sand|stone": {out:"gravel", why:"The mixture forms a coarser mineral aggregate."},
-  "mud|stone": {out:"clay", why:"Further processing produces a fine, malleable mineral material."},
-  "fire|sand": {out:"glass", why:"Heat fuses the sand into glass-like material."},
-  "water|water": {out:"mist", why:"The source material condenses into a fine water mist."},
-  "fire|stone": {out:"heatedStone", why:"Fire transfers heat into the stone."},
-  "heat|stone": {out:"heatedStone", why:"Thermal energy heats the mineral."},
-  "heat|water": {out:"steam", why:"Thermal energy transforms water into steam."},
-  "heat|sand": {out:"glass", why:"Heat fuses sand into glass-like material."},
-  "heat|mud": {out:"clay", why:"Heat dries and transforms the wet mineral mixture."},
-  "clay|water": {out:"fertileClay", why:"The mineral mixture becomes a water-rich growth medium."},
-  "mud|water": {out:"sediment", why:"The mixture settles into mineral sediment."},
-  "clay|sand": {out:"compositeMineral", why:"The two mineral materials form a composite."},
-  "glass|stone": {out:"compositeMineral", why:"The materials form a structured mineral composite."},
-  "fire|mud": {out:"clay", why:"Heat transforms the mineral mixture."},
-  "fire|glass": {out:"compositeMineral", why:"Further heating changes the material structure."},
-  "fire|flint": {out:"heatedStone", why:"The mineral absorbs thermal energy."},
-  "mist|stone": {out:"sediment", why:"Moisture and mineral particles settle together."},
-  "mist|sand": {out:"mud", why:"Water droplets bind the sand grains."},
-  "gravel|water": {out:"sediment", why:"Water separates and deposits mineral particles."},
-  "flint|water": {out:"sediment", why:"The mineral surface breaks down into a wet deposit."}
-};
+const RECIPES = {};
+function put(a,b,out,why) {
+  RECIPES[keyOf(a,b)] = {out,why};
+}
 
-const FALLBACKS = [
-  {needs:["liquid","mineral"],out:"sediment",why:"Liquid and mineral matter form a deposit."},
-  {needs:["hot","liquid"],out:"steam",why:"Thermal energy transforms the liquid."},
-  {needs:["mineral","energy"],out:"chargedMineral",why:"Energy changes the mineral's properties."},
-  {needs:["nutrient","mineral"],out:"fertileClay",why:"Mineral matter combines with growth-supporting material."},
-  {needs:["liquid","liquid"],out:"mist",why:"The liquids form a fine suspended mixture."},
-  {needs:["mineral","mineral"],out:"compositeMineral",why:"The materials form a composite mineral structure."},
-  {needs:["energy","energy"],out:"fire",why:"The energy sources combine into a stronger thermal reaction."}
+function keyOf(a,b) {
+  return [a,b].sort().join("|");
+}
+
+put("stone","water","sand",
+  "Water and stone produce loose mineral grains in this experimental world.");
+put("stone","stone","flint",
+  "The mineral surfaces form a flint-like material.");
+put("flint","stone","sparks",
+  "Striking flint against stone produces sparks.");
+put("sand","sparks","fire",
+  "Sparks trigger a thermal reaction.");
+put("fire","water","steam",
+  "Heat transforms water into steam.");
+put("sand","water","mud",
+  "Water binds loose mineral grains into mud.");
+put("sand","stone","gravel",
+  "The materials form a coarse mineral aggregate.");
+put("mud","stone","clay",
+  "Processing the mixture produces fine mineral matter.");
+put("fire","sand","glass",
+  "Heat transforms sand into glass-like material.");
+put("water","water","mist",
+  "The water source produces a fine water mist.");
+put("fire","stone","heatedStone",
+  "Fire transfers thermal energy into stone.");
+put("heat","stone","heatedStone",
+  "Thermal energy heats the mineral.");
+put("heat","water","steam",
+  "Thermal energy transforms water into steam.");
+put("heat","sand","glass",
+  "Heat transforms sand into glass-like material.");
+put("heat","mud","clay",
+  "Heat transforms the wet mineral mixture.");
+put("clay","water","fertileClay",
+  "The mixture becomes a water-rich growth medium.");
+put("mud","water","sediment",
+  "The mixture settles into mineral sediment.");
+put("clay","sand","compositeMineral",
+  "The materials form a composite mineral structure.");
+put("glass","stone","compositeMineral",
+  "The materials form a structured mineral composite.");
+put("fire","mud","clay",
+  "Heat transforms the mineral mixture.");
+put("fire","glass","compositeMineral",
+  "Further heating changes the material structure.");
+put("fire","flint","heatedStone",
+  "Thermal energy changes the mineral.");
+put("mist","stone","sediment",
+  "Moisture and mineral particles settle together.");
+put("mist","sand","mud",
+  "Water droplets bind sand grains.");
+put("gravel","water","sediment",
+  "Water separates and deposits mineral particles.");
+put("flint","water","sediment",
+  "The mineral surface breaks down into a wet deposit.");
+
+const PREFIXES = [
+  "Aether","Luma","Vitra","Mora","Cryo","Nexa","Velo","Thal",
+  "Zyra","Orbi","Myco","Auri","Pyra","Vel","Ossa","Nimbi",
+  "Kera","Ech","Sol","Umbra","Tera","Cera","Flora","Prisma"
 ];
 
-const freshState = () => ({
-  inventory:{}, discovered:["water","stone"], experiments:0,
-  unlocked:["water","stone"], log:["Lab initialized. Water and Stone sources are online."]
-});
-let state;
-try {
-  state = JSON.parse(localStorage.getItem(SAVE_KEY)) || freshState();
-  if (!state.inventory || !state.discovered || !state.unlocked) state = freshState();
-} catch { state = freshState(); }
+const SUFFIXES = [
+  "lith","glass","core","moss","flux","crystal","matter",
+  "shard","weave","essence","stone","form","ite","gel",
+  "matrix","spark","veil","grain","bloom","alloy","drift",
+  "nexus","silica","root"
+];
 
+function hash32(text, seed=2166136261) {
+  let h = seed >>> 0;
+  for (let i=0;i<text.length;i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h,16777619);
+  }
+  return h >>> 0;
+}
+
+function hashPair(text) {
+  return [
+    hash32(text,2166136261).toString(36),
+    hash32(text,3339675911).toString(36)
+  ].join("_");
+}
+
+function shortCode(text) {
+  return hash32(text,2654435761).toString(36).toUpperCase().padStart(5,"0").slice(-5);
+}
+
+function generatedName(id) {
+  const h1 = hash32(id,2166136261);
+  const h2 = hash32(id,3339675911);
+  return PREFIXES[h1 % PREFIXES.length]
+    + SUFFIXES[h2 % SUFFIXES.length]
+    + "-" + shortCode(id);
+}
+
+function generatedIcon(id) {
+  const h1 = hash32(id,2166136261);
+  const h2 = hash32(id,3339675911);
+  const hue1 = h1 % 360;
+  const hue2 = (hue1 + 55 + h2 % 100) % 360;
+  const shape = h2 % 3;
+  const core = shape === 0
+    ? '<polygon points="32,10 49,21 46,43 30,54 15,40 16,22"/>'
+    : shape === 1
+    ? '<path d="M32 9 C43 17 53 27 46 40 C41 51 24 53 16 40 C8 27 22 17 32 9 Z"/>'
+    : '<path d="M32 8 L49 19 L51 39 L32 54 L13 39 L15 19 Z"/>';
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="36" height="36" aria-label="Generated material icon">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="hsl(${hue1},75%,75%)"/>
+        <stop offset="100%" stop-color="hsl(${hue2},70%,38%)"/>
+      </linearGradient>
+      <radialGradient id="glow">
+        <stop offset="0%" stop-color="hsl(${hue1},90%,80%)" stop-opacity=".75"/>
+        <stop offset="100%" stop-color="hsl(${hue2},80%,30%)" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <circle cx="32" cy="32" r="30" fill="url(#glow)"/>
+    ${core.replace("/>",' fill="url(#g)" stroke="hsl('+hue1+',85%,85%)" stroke-width="1.5"/>')}
+    <path d="M24 18 L31 27 L25 36 L33 44" fill="none" stroke="#ffffff" stroke-opacity=".65" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="${20 + h1%25}" cy="${17 + h2%25}" r="2" fill="#fff" fill-opacity=".85"/>
+    <circle cx="${35 + h2%12}" cy="${35 + h1%12}" r="1.6" fill="#fff" fill-opacity=".65"/>
+  </svg>`;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function freshState() {
+  return {
+    inventory:{},
+    discovered:["water","stone"],
+    experiments:0,
+    unlocked:["water","stone"],
+    log:["Lab initialized. Water and Stone sources are online."],
+    generatedItems:{},
+    generatedRecipes:{}
+  };
+}
+
+function loadState() {
+  let saved;
+  try {
+    saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+  } catch {}
+  if (!saved || typeof saved !== "object") {
+    // Migrate the previous prototype's save if available.
+    try {
+      saved = JSON.parse(localStorage.getItem("hig-lab-v03"));
+    } catch {}
+  }
+  if (!saved || typeof saved !== "object") return freshState();
+
+  const state = {
+    inventory: saved.inventory || {},
+    discovered: Array.isArray(saved.discovered) ? saved.discovered : ["water","stone"],
+    experiments: Number(saved.experiments) || 0,
+    unlocked: Array.isArray(saved.unlocked) ? saved.unlocked : ["water","stone"],
+    log: Array.isArray(saved.log) ? saved.log : [],
+    generatedItems: saved.generatedItems || {},
+    generatedRecipes: saved.generatedRecipes || {}
+  };
+
+  // Keep any components from the previous prototype visible.
+  const oldIds = new Set([
+    ...Object.keys(state.inventory),
+    ...state.discovered
+  ]);
+
+  for (const id of oldIds) {
+    if (BASE_ITEMS[id] || state.generatedItems[id]) continue;
+    const h = hashPair(id);
+    state.generatedItems[id] = {
+      name:"Archived Material " + shortCode(id),
+      kind:"Archived material",
+      desc:"A component carried over from an earlier Lab version.",
+      traits:["generated","structured"],
+      legacy:true
+    };
+  }
+
+  if (!state.unlocked.includes("water")) state.unlocked.push("water");
+  if (!state.unlocked.includes("stone")) state.unlocked.push("stone");
+  if (!state.discovered.includes("water")) state.discovered.push("water");
+  if (!state.discovered.includes("stone")) state.discovered.push("stone");
+
+  return state;
+}
+
+let state = loadState();
 let selected = [];
 
 function save() {
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch {}
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  } catch (error) {
+    console.warn("Could not save Lab state.",error);
+  }
 }
-function item(id) { return ITEMS[id] || ITEMS.hybridMatter; }
-function keyOf(a,b) { return [a,b].sort().join("|"); }
-function count(id) { return state.inventory[id] || 0; }
-function add(id, amount=1) {
+
+function item(id) {
+  return BASE_ITEMS[id] || state.generatedItems[id] || {
+    name:"Unknown Material",
+    icon:"🧬",
+    kind:"Material",
+    desc:"An unidentified component.",
+    traits:["structured"]
+  };
+}
+
+function iconMarkup(id) {
+  if (state.generatedItems[id]) return generatedIcon(id);
+  return escapeHtml(item(id).icon || "🧪");
+}
+
+function count(id) {
+  return Number(state.inventory[id]) || 0;
+}
+
+function add(id,amount=1) {
   state.inventory[id] = count(id) + amount;
 }
-function consume(id, amount=1) {
-  state.inventory[id] = Math.max(0,count(id)-amount);
-  if (!state.inventory[id]) delete state.inventory[id];
+
+function consume(id,amount=1) {
+  const remaining = count(id) - amount;
+  if (remaining <= 0) delete state.inventory[id];
+  else state.inventory[id] = remaining;
 }
+
 function note(message) {
   state.log.unshift(message);
   state.log = state.log.slice(0,12);
 }
+
 function unlockSources() {
   if (state.discovered.includes("fire") && !state.unlocked.includes("heat")) {
     state.unlocked.push("heat");
     note("NEW SOURCE UNLOCKED: Thermal Vent.");
   }
 }
-function recipeFor(a,b) {
-  const explicit = RECIPES[keyOf(a,b)];
-  if (explicit) return explicit;
-  const traits = [...new Set([...item(a).traits,...item(b).traits])];
-  for (const rule of FALLBACKS) {
-    if (rule.needs.every(t => traits.includes(t))) return {out:rule.out,why:rule.why};
+
+function makeGeneratedItem(a,b,key) {
+  const parents = [a,b].sort();
+  const id = "g_" + hashPair(key);
+  const first = item(parents[0]);
+  const second = item(parents[1]);
+
+  const traits = [...new Set([
+    ...(first.traits || []),
+    ...(second.traits || []),
+    "generated",
+    "structured"
+  ])];
+
+  const generated = {
+    name:generatedName(key),
+    kind:"Generated material",
+    desc:"A stable material formed from "
+      + first.name + " and " + second.name
+      + ". Its properties inherit traits from both components.",
+    traits,
+    parents,
+    recipeKey:key
+  };
+
+  // Extremely unlikely hash collision: resolve it deterministically.
+  let finalId = id;
+  let salt = 0;
+  while (
+    (BASE_ITEMS[finalId] ||
+     (state.generatedItems[finalId] &&
+      state.generatedItems[finalId].recipeKey !== key))
+  ) {
+    salt++;
+    finalId = "g_" + hashPair(key + "#" + salt);
   }
-  return {out:"hybridMatter",why:"The components form a stable hybrid material with combined properties."};
+
+  if (!state.generatedItems[finalId]) {
+    state.generatedItems[finalId] = generated;
+  }
+
+  return finalId;
 }
+
+function recipeFor(a,b) {
+  const key = keyOf(a,b);
+
+  // Hand-crafted reactions take priority.
+  if (RECIPES[key]) return RECIPES[key];
+
+  // Reuse the exact same recipe after every reload.
+  if (state.generatedRecipes[key]) {
+    return state.generatedRecipes[key];
+  }
+
+  // Every other pair, including an item combined with itself,
+  // receives one deterministic result.
+  const out = makeGeneratedItem(a,b,key);
+  const reaction = {
+    out,
+    why:"A new material forms from the combined properties of "
+      + item(a).name + " and " + item(b).name + "."
+  };
+
+  state.generatedRecipes[key] = reaction;
+  save();
+  return reaction;
+}
+
 function extract(id) {
-  if (id === "heat" && !state.unlocked.includes("heat")) return;
+  if (!state.unlocked.includes(id)) return;
+
   add(id);
   if (!state.discovered.includes(id)) state.discovered.push(id);
+
   note("Extracted 1 unit of " + item(id).name + ".");
   render();
-  selectFeedback("Extracted " + item(id).name + ". Source remains infinite.");
+  selectFeedback("Extracted " + item(id).name + ". The source remains infinite.");
 }
+
 function selectItem(id) {
   if (count(id) < 1) return;
+
   if (selected.length === 0) {
     selected = [id];
   } else if (selected.length === 1) {
@@ -393,108 +717,174 @@ function selectItem(id) {
   } else {
     selected = [id];
   }
+
   render();
 }
+
 function combine() {
   if (selected.length !== 2) return;
+
   const [a,b] = selected;
   if (count(a) < 1 || count(b) < (a === b ? 2 : 1)) {
-    selectFeedback("Not enough material. Extract more from an infinite source.");
-    selected = []; render(); return;
+    selectFeedback("Not enough material. Extract more from a source.");
+    selected = [];
+    render();
+    return;
   }
-  const reaction = recipeFor(a,b);
+
+  // Determine and validate the outcome BEFORE consuming ingredients.
+  let reaction;
+  try {
+    reaction = recipeFor(a,b);
+    if (!reaction || !reaction.out || !item(reaction.out)) {
+      throw new Error("Reaction has no valid output.");
+    }
+  } catch (error) {
+    console.error(error);
+    selectFeedback("Reaction failed. Your ingredients have been preserved.");
+    return;
+  }
+
   consume(a);
   consume(b);
   add(reaction.out);
   state.experiments++;
+
   if (!state.discovered.includes(reaction.out)) {
     state.discovered.push(reaction.out);
     note("NEW DISCOVERY: " + item(reaction.out).name + ".");
   } else {
     note("Synthesized " + item(reaction.out).name + ".");
   }
+
   unlockSources();
   selected = [];
   save();
   render();
   selectFeedback("Reaction complete: " + item(reaction.out).name + " added to inventory.");
 }
+
 function selectFeedback(message) {
   document.getElementById("feedback").textContent = message;
 }
+
 function renderSources() {
   const root = document.getElementById("sources");
   root.innerHTML = "";
+
   SOURCES.filter(s => state.unlocked.includes(s.id)).forEach(s => {
     const b = document.createElement("button");
     b.className = "source-card";
-    b.innerHTML = `<span class="source-icon">${s.icon}</span><span><span class="source-name">${s.name}</span><span class="source-desc">${s.desc}</span><span class="collect">＋ EXTRACT UNIT</span></span>`;
+    b.innerHTML = `<span class="source-icon">${s.icon}</span>
+      <span><span class="source-name">${escapeHtml(s.name)}</span>
+      <span class="source-desc">${escapeHtml(s.desc)}</span>
+      <span class="collect">＋ EXTRACT UNIT</span></span>`;
     b.onclick = () => extract(s.id);
     root.appendChild(b);
   });
-  document.getElementById("unlockHint").innerHTML = state.unlocked.includes("heat")
-    ? "<b style='color:var(--accent)'>New source online</b><br>The Thermal Vent is now available permanently."
-    : "<b style='color:var(--gold)'>Research objective</b><br>Discover Fire to unlock a permanent Heat Source.";
+
+  document.getElementById("unlockHint").innerHTML =
+    state.unlocked.includes("heat")
+      ? "<b style='color:var(--accent)'>New source online</b><br>The Thermal Vent is now permanently available."
+      : "<b style='color:var(--gold)'>Research objective</b><br>Discover Fire to unlock a permanent Heat Source.";
 }
+
 function renderInventory() {
   const root = document.getElementById("inventory");
   root.innerHTML = "";
-  const ids = Object.keys(state.inventory).filter(id => count(id)>0).sort((a,b)=>item(a).name.localeCompare(item(b).name));
+
+  const ids = Object.keys(state.inventory)
+    .filter(id => count(id) > 0)
+    .sort((a,b) => item(a).name.localeCompare(item(b).name));
+
   document.getElementById("inventoryCount").textContent = ids.length + " TYPES";
-  if (!ids.length) root.innerHTML = '<div class="empty">Your inventory is empty.<br>Extract Water and Stone to begin experimenting.</div>';
+
+  if (!ids.length) {
+    root.innerHTML = '<div class="empty">Your inventory is empty.<br>Extract Water and Stone to begin.</div>';
+  }
+
   ids.forEach(id => {
     const b = document.createElement("button");
     b.className = "inv-item" + (selected.includes(id) ? " selected" : "");
-    b.innerHTML = `<span class="inv-icon">${item(id).icon}</span><span><span class="inv-name">${item(id).name}</span><span class="inv-type">${item(id).kind}</span></span><span class="inv-count">×${count(id)}</span>`;
+    b.innerHTML = `<span class="inv-icon">${iconMarkup(id)}</span>
+      <span><span class="inv-name">${escapeHtml(item(id).name)}</span>
+      <span class="inv-type">${escapeHtml(item(id).kind)}</span></span>
+      <span class="inv-count">×${count(id)}</span>`;
     b.onclick = () => selectItem(id);
     root.appendChild(b);
   });
 }
+
 function renderSlot(slotId,id,number) {
   const root = document.getElementById(slotId);
+
   if (!id) {
     root.className = "slot";
-    root.innerHTML = '<div class="slot-icon">＋</div><div class="slot-name">Select component</div><div class="slot-sub">Ingredient '+number+'</div>';
+    root.innerHTML = `<div class="slot-icon">＋</div>
+      <div class="slot-name">Select component</div>
+      <div class="slot-sub">Ingredient ${number}</div>`;
     return;
   }
+
   root.className = "slot filled";
-  root.innerHTML = `<div class="slot-icon">${item(id).icon}</div><div class="slot-name">${item(id).name}</div><div class="slot-sub">×${selected.filter(x=>x===id).length} selected</div>`;
+  root.innerHTML = `<div class="slot-icon">${iconMarkup(id)}</div>
+    <div class="slot-name">${escapeHtml(item(id).name)}</div>
+    <div class="slot-sub">×${selected.filter(x=>x===id).length} selected</div>`;
 }
+
 function renderReaction() {
   const ready = selected.length === 2;
   renderSlot("slotA",selected[0],1);
   renderSlot("slotB",selected[1],2);
+
   const name = document.getElementById("resultName");
   const desc = document.getElementById("resultDescription");
   const status = document.getElementById("reactionStatus");
+  const button = document.getElementById("combineBtn");
+
   if (!ready) {
     name.textContent = "—";
-    desc.textContent = selected.length === 1 ? "Choose a second component from your inventory." : "Choose two components from your inventory.";
+    desc.textContent = selected.length === 1
+      ? "Choose a second component from your inventory."
+      : "Choose two components from your inventory.";
     status.textContent = selected.length ? "ONE MORE" : "AWAITING INPUT";
-    document.getElementById("combineBtn").disabled = true;
+    button.disabled = true;
     return;
   }
-  const r = recipeFor(selected[0],selected[1]);
-  name.textContent = item(r.out).icon + " " + item(r.out).name;
-  desc.textContent = r.why;
-  status.textContent = state.discovered.includes(r.out) ? "KNOWN REACTION" : "NEW DISCOVERY";
-  document.getElementById("combineBtn").disabled = false;
+
+  const reaction = recipeFor(selected[0],selected[1]);
+  name.textContent = item(reaction.out).name;
+  desc.textContent = reaction.why;
+  status.textContent = state.discovered.includes(reaction.out)
+    ? "KNOWN REACTION" : "NEW DISCOVERY";
+  button.disabled = false;
 }
+
 function renderCodex() {
   const root = document.getElementById("codex");
   root.innerHTML = "";
-  const ids = [...state.discovered].sort((a,b)=>item(a).name.localeCompare(item(b).name));
+
+  const ids = [...new Set(state.discovered)]
+    .sort((a,b) => item(a).name.localeCompare(item(b).name));
+
   document.getElementById("codexCount").textContent = ids.length + " KNOWN";
+
   ids.forEach(id => {
     const row = document.createElement("div");
     row.className = "codex-entry";
-    row.innerHTML = `<span class="codex-icon">${item(id).icon}</span><span><div class="codex-name">${item(id).name}</div><div class="codex-kind">${item(id).kind}${count(id) ? " · Owned: "+count(id) : " · Not in inventory"}</div></span>`;
+    row.innerHTML = `<span class="codex-icon">${iconMarkup(id)}</span>
+      <span><div class="codex-name">${escapeHtml(item(id).name)}</div>
+      <div class="codex-kind">${escapeHtml(item(id).kind)}${
+        count(id) ? " · Owned: " + count(id) : " · Not in inventory"
+      }</div></span>`;
     root.appendChild(row);
   });
 }
+
 function renderLog() {
   const root = document.getElementById("logList");
   root.innerHTML = "";
+
   state.log.slice(0,8).forEach(entry => {
     const el = document.createElement("span");
     el.className = "log-entry";
@@ -502,28 +892,42 @@ function renderLog() {
     root.appendChild(el);
   });
 }
+
 function render() {
   renderSources();
   renderInventory();
   renderReaction();
   renderCodex();
   renderLog();
+
   const total = Object.values(state.inventory).reduce((a,b)=>a+b,0);
   document.getElementById("resourceStat").textContent = total;
   document.getElementById("discoveryStat").textContent = state.discovered.length;
   document.getElementById("experimentCount").textContent = state.experiments + " EXPERIMENTS";
-  document.getElementById("stageLabel").textContent = state.unlocked.includes("heat") ? "STAGE 02 · TRANSFORMATION" : "STAGE 01 · ORIGINS";
+  document.getElementById("stageLabel").textContent =
+    state.unlocked.includes("heat")
+      ? "STAGE 02 · TRANSFORMATION"
+      : "STAGE 01 · ORIGINS";
+
   save();
 }
 
 document.getElementById("combineBtn").addEventListener("click",combine);
+
 document.getElementById("clearBtn").addEventListener("click",()=>{
-  selected=[]; render(); selectFeedback("Selection cleared.");
+  selected = [];
+  render();
+  selectFeedback("Selection cleared.");
 });
+
 document.getElementById("resetBtn").addEventListener("click",()=>{
   if (!confirm("Reset the Lab? All inventory, discoveries and progress will be lost.")) return;
-  state=freshState(); selected=[]; render(); selectFeedback("Lab reset. Begin again with Water and Stone.");
+  state = freshState();
+  selected = [];
+  render();
+  selectFeedback("Lab reset. Begin again with Water and Stone.");
 });
+
 render();
 </script>
 </body>
