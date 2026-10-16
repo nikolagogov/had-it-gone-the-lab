@@ -4,577 +4,526 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080c12">
 <title>HAD IT GONE: THE LAB</title>
 <style>
 :root {
-  color-scheme: dark;
-  --bg: #080c12;
-  --panel: #101720;
-  --panel2: #151f2b;
-  --line: #263544;
-  --text: #edf5fa;
-  --muted: #8b9aaa;
-  --mint: #73f4cb;
-  --blue: #70baff;
-  --purple: #bb9aff;
-  --danger: #ff9b9b;
+  --bg:#091116; --panel:#111d24; --panel2:#17262e;
+  --line:#263a43; --text:#e6f2f3; --muted:#8199a2;
+  --accent:#64e0c0; --blue:#70bfff; --gold:#f1c779;
 }
-* { box-sizing: border-box; }
+* { box-sizing:border-box; }
 body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 50% -15%, #183a42 0%, transparent 48%),
-    var(--bg);
-  color: var(--text);
-  font: 14px/1.5 Inter, ui-sans-serif, system-ui, sans-serif;
+  margin:0; height:100vh; overflow:hidden; color:var(--text);
+  background:radial-gradient(ellipse at 50% -20%,#19363d 0%,var(--bg) 55%);
+  font:14px/1.4 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;
 }
-button, input { font: inherit; }
-button { color: inherit; }
+button { font:inherit; cursor:pointer; }
+button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.app { height:100dvh; display:flex; flex-direction:column; min-height:0; }
 header {
-  height: 76px;
-  padding: 0 5%;
-  border-bottom: 1px solid #263544aa;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  background: #080c12b8;
+  height:70px; flex-shrink:0; padding:0 24px; display:flex;
+  align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--line); background:#0b161ce8;
 }
-.brand { display: flex; align-items: center; gap: 12px; }
+.brand { display:flex; align-items:center; gap:13px; }
 .logo {
-  width: 38px; height: 38px; border-radius: 12px;
-  display: grid; place-items: center;
-  color: var(--mint); font-size: 23px;
-  background: linear-gradient(145deg,#183d3b,#13202b);
-  border: 1px solid #38665e;
-  box-shadow: 0 0 25px #73f4cb12;
+  width:40px;height:40px;display:grid;place-items:center;
+  border:1px solid #367d75;border-radius:12px;
+  background:linear-gradient(145deg,#1c514d,#14252e);
+  font-size:22px;box-shadow:0 0 24px #55e0b41c;
 }
-.brand-name { font-size: 14px; font-weight: 800; letter-spacing: 1.5px; }
-.brand-sub { color: var(--muted); font-size: 10px; letter-spacing: 2px; }
-.header-right { display: flex; gap: 18px; align-items: center; }
-.status { color: var(--mint); font-size: 11px; letter-spacing: 1px; }
-.counter { color: var(--muted); font-size: 12px; }
-main { max-width: 1220px; margin: auto; padding: 32px 22px 55px; }
-.intro { margin-bottom: 26px; }
-.kicker { color: var(--mint); font-size: 10px; font-weight: 800; letter-spacing: 3px; }
-h1 { font-size: clamp(29px,4vw,43px); letter-spacing: -1.5px; line-height: 1.1; margin: 9px 0; }
-.intro p { color: var(--muted); max-width: 600px; margin: 0; }
-.layout { display: grid; grid-template-columns: minmax(0,1.6fr) minmax(275px,.8fr); gap: 18px; align-items: start; }
+.brand h1 { font-size:16px; letter-spacing:2px; margin:0; }
+.brand p { margin:3px 0 0; color:var(--muted); font-size:11px; letter-spacing:1px; }
+.header-right { display:flex; align-items:center; gap:22px; }
+.stat { text-align:right; }
+.stat strong { display:block;font-size:16px;color:var(--accent); }
+.stat span { color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px; }
+.stage { color:var(--gold);font-size:11px;letter-spacing:1px; }
+main {
+  flex:1; min-height:0; padding:14px;
+  display:grid; grid-template-columns:minmax(205px,0.82fr) minmax(350px,1.55fr) minmax(250px,1fr);
+  gap:14px;
+}
 .panel {
-  border: 1px solid var(--line); border-radius: 17px;
-  background: linear-gradient(145deg,#121b25f5,#0d131bf5);
-  overflow: hidden;
+  min-height:0; min-width:0; display:flex; flex-direction:column;
+  border:1px solid var(--line); border-radius:15px;
+  background:linear-gradient(160deg,#14232b,#0f1a20 75%);
+  overflow:hidden;
 }
 .panel-head {
-  padding: 17px 19px; display: flex; justify-content: space-between;
-  align-items: center; gap: 12px; border-bottom: 1px solid var(--line);
+  padding:15px 16px 12px; border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
 }
-.panel-title { font-weight: 750; font-size: 13px; letter-spacing: .5px; }
-.panel-sub { color: var(--muted); font-size: 11px; margin-top: 3px; }
-.step { color: #617486; font-size: 10px; letter-spacing: 1.5px; }
-.panel-body { padding: 17px; }
-.section-label {
-  color: var(--muted); font-size: 10px; font-weight: 750;
-  letter-spacing: 1.5px; margin: 0 0 12px;
+.eyebrow { color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase; }
+.panel-head h2 { font-size:13px;letter-spacing:1.2px;margin:4px 0 0; }
+.pill { border:1px solid #2e5d58;color:var(--accent);padding:4px 7px;border-radius:6px;font-size:10px;white-space:nowrap; }
+.panel-body { padding:13px; overflow:auto; min-height:0; }
+.section-label { margin:0 0 9px;color:var(--muted);font-size:10px;letter-spacing:1.4px;text-transform:uppercase; }
+.source-card {
+  width:100%;display:flex;align-items:center;gap:11px;text-align:left;
+  padding:11px;margin-bottom:9px;border:1px solid #29434b;
+  border-radius:11px;background:#172a32;color:var(--text);
+  transition:.15s;
 }
-.elements { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 9px; }
-.element {
-  min-width: 0; position: relative; text-align: left;
-  background: #111a24; border: 1px solid #293846;
-  border-radius: 12px; padding: 12px 10px;
-  cursor: pointer; transition: border-color .16s, background .16s, transform .16s;
+.source-card:hover { border-color:#5bafa0;background:#1b343b;transform:translateY(-1px); }
+.source-icon {
+  width:43px;height:43px;flex-shrink:0;display:grid;place-items:center;
+  border-radius:10px;background:#213d46;font-size:25px;
 }
-.element:hover { border-color: #52766f; transform: translateY(-2px); }
-.element.selected {
-  border-color: var(--mint); background: #18302f;
-  box-shadow: inset 0 0 0 1px #73f4cb22, 0 0 20px #73f4cb0c;
+.source-name { display:block;font-weight:650;font-size:12px; }
+.source-desc { display:block;color:var(--muted);font-size:10px;margin-top:3px; }
+.collect { display:block;color:var(--accent);font-size:10px;margin-top:5px; }
+.hint {
+  border:1px dashed #31454c;border-radius:10px;padding:11px;
+  color:var(--muted);font-size:11px;line-height:1.6;margin-top:10px;
 }
-.element.selected::after {
-  content: "SELECTED"; position: absolute; right: 7px; top: 7px;
-  font-size: 7px; letter-spacing: .6px; color: var(--mint);
+.chamber { background:radial-gradient(ellipse at 50% 38%,#18343b 0%,#101d24 60%); }
+.chamber-content {
+  flex:1;min-height:0;padding:18px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;
 }
-.element-icon {
-  height: 48px; display: grid; place-items: center; font-size: 31px;
-  border-radius: 9px; margin-bottom: 10px;
-  background: radial-gradient(circle,#30465466,transparent 75%);
-}
-.element-name { display: block; font-weight: 700; font-size: 11px; overflow-wrap: anywhere; }
-.element-type { display: block; margin-top: 4px; font-size: 9px; color: var(--muted); }
-.trait-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-.trait {
-  color: #a4c7d6; background: #1a2934; border: 1px solid #263c49;
-  border-radius: 4px; padding: 2px 5px; font-size: 8px; text-transform: uppercase;
-  letter-spacing: .4px;
-}
-.divider { height: 1px; background: var(--line); margin: 19px 0; }
-.bench {
-  min-height: 155px; padding: 15px; border: 1px dashed #334754;
-  border-radius: 13px; background:
-    radial-gradient(ellipse at center,#17352e30,transparent 72%),#0a1118;
-  display: grid; grid-template-columns: 1fr 44px 1fr;
-  gap: 9px; align-items: center;
-}
+.chamber-title { text-align:center; }
+.chamber-title h2 { margin:5px 0;font-size:19px;letter-spacing:1px; }
+.chamber-title p { color:var(--muted);margin:0;font-size:11px; }
+.slots { width:100%;display:grid;grid-template-columns:1fr 30px 1fr;align-items:center;gap:7px; }
 .slot {
-  min-width: 0; min-height: 105px; border-radius: 11px;
-  border: 1px solid #253845; background: #111c25;
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; text-align: center; padding: 10px;
+  min-height:130px;border:1px dashed #38535d;border-radius:13px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:7px;padding:10px;background:#0d1a20;
 }
-.slot-icon { font-size: 30px; }
-.slot-name { font-size: 11px; font-weight: 700; margin-top: 7px; overflow-wrap: anywhere; }
-.slot-empty { font-size: 10px; color: #657787; }
-.plus {
-  display: grid; place-items: center; color: var(--mint);
-  font-size: 22px; background: #142a2a; border: 1px solid #285149;
-  border-radius: 50%; width: 38px; height: 38px; margin: auto;
+.slot.filled { border-style:solid;border-color:#39796e;background:linear-gradient(145deg,#183c3a,#11262c); }
+.slot-icon { font-size:37px;line-height:1.1; }
+.slot-name { font-size:12px;font-weight:650;text-align:center; }
+.slot-sub { color:var(--muted);font-size:10px; }
+.plus { text-align:center;color:#66838b;font-size:20px; }
+.result-box {
+  width:100%;border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;background:#0c181e;min-height:76px;
 }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-.btn {
-  border: 1px solid var(--line); border-radius: 8px;
-  padding: 10px 13px; cursor: pointer; font-weight: 700; font-size: 11px;
-  background: #17232d; transition: .15s;
+.result-top { display:flex;justify-content:space-between;align-items:center;gap:8px; }
+.result-title { font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase; }
+.result-name { font-size:14px;font-weight:700;margin-top:5px; }
+.result-description { font-size:11px;color:var(--muted);margin-top:4px; }
+.result-status { color:var(--gold);font-size:10px; }
+.actions { width:100%;display:flex;gap:8px; }
+.primary,.secondary {
+  border-radius:9px;padding:12px 10px;font-weight:700;font-size:11px;
+  letter-spacing:.6px;transition:.15s;
 }
-.btn:hover { border-color: #52766f; }
-.btn:disabled { opacity: .35; cursor: not-allowed; }
-.btn-primary { color: #06140f; background: var(--mint); border-color: var(--mint); }
-.btn-primary:hover { background: #a0ffdf; }
-.btn-quiet { background: transparent; color: var(--muted); }
-.result {
-  margin-top: 15px; padding: 15px; border-radius: 12px;
-  border: 1px solid var(--line); background: #0b1219;
-  min-height: 90px;
+.primary { flex:1;background:var(--accent);color:#08221e;border:1px solid var(--accent); }
+.primary:hover:not(:disabled) { background:#a0f4dc; }
+.primary:disabled { opacity:.35;cursor:not-allowed; }
+.secondary { background:#17272e;color:#b7cbd0;border:1px solid #344952; }
+.secondary:hover { border-color:#718e95; }
+.feedback { min-height:16px;color:var(--muted);font-size:11px;text-align:center; }
+.right-panel { display:grid;grid-template-rows:minmax(0,1.05fr) minmax(0,1fr);gap:14px;min-height:0; }
+.right-panel .panel { min-height:0; }
+.count-badge { color:var(--accent);font-size:10px; }
+.inventory-list,.codex-list,.log-list { display:flex;flex-direction:column;gap:7px; }
+.inv-item {
+  width:100%;display:flex;align-items:center;gap:9px;text-align:left;
+  border:1px solid #293e46;border-radius:9px;padding:8px;
+  background:#14242b;color:var(--text);
 }
-.result.success { border-color: #3d7668; background: linear-gradient(120deg,#18322c,#0b141a); }
-.result.error { border-color: #614047; }
-.result-top { display: flex; gap: 12px; align-items: center; }
-.result-icon {
-  width: 48px; height: 48px; flex-shrink: 0; display: grid; place-items: center;
-  font-size: 28px; border-radius: 11px; background: #20352f;
+.inv-item:hover { border-color:#64838b; }
+.inv-item.selected { border-color:var(--accent);background:#183a37;box-shadow:inset 0 0 0 1px #64e0c022; }
+.inv-icon { width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:#213740;font-size:20px;flex-shrink:0; }
+.inv-name { font-size:11px;font-weight:650;display:block; }
+.inv-type { color:var(--muted);font-size:10px;display:block;margin-top:2px; }
+.inv-count { margin-left:auto;color:var(--accent);font-size:12px;font-weight:700; }
+.empty { color:var(--muted);font-size:11px;padding:12px 4px;line-height:1.6; }
+.codex-entry { display:flex;align-items:center;gap:9px;padding:6px 2px;border-bottom:1px solid #22343b; }
+.codex-entry:last-child { border-bottom:0; }
+.codex-icon { font-size:21px;width:29px;text-align:center; }
+.codex-name { font-size:11px;font-weight:650; }
+.codex-kind { color:var(--muted);font-size:10px;margin-top:2px; }
+.log { border-top:1px solid var(--line);padding:10px 15px;background:#0b171c;flex-shrink:0; }
+.log-head { display:flex;justify-content:space-between;align-items:center;margin-bottom:6px; }
+.log-list { flex-direction:row;gap:8px;overflow:auto;white-space:nowrap; }
+.log-entry { color:#9db3ba;font-size:10px;padding:5px 8px;background:#13232a;border-radius:5px; }
+.log-entry b { color:var(--accent);font-weight:600; }
+.toast { color:var(--accent); }
+@media(max-width:900px) {
+  body { height:auto;min-height:100vh;overflow:auto; }
+  .app { height:auto;min-height:100vh; }
+  header { padding:0 13px;height:64px; }
+  .header-right { gap:10px; }
+  main { grid-template-columns:1fr; }
+  .panel { min-height:260px; }
+  .right-panel { grid-template-rows:auto auto; }
+  .chamber-content { min-height:400px; }
+  .log { position:relative; }
 }
-.result-name { font-size: 14px; font-weight: 800; }
-.result-type { color: var(--mint); font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px; }
-.result-desc { color: #b1bfca; font-size: 12px; margin: 11px 0 0; }
-.result-placeholder { color: var(--muted); font-size: 11px; }
-.result .trait-row { margin-top: 11px; }
-.sidebar-stack { display: grid; gap: 18px; }
-.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-.stat { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #101922; }
-.stat-num { font-size: 23px; font-weight: 800; letter-spacing: -1px; }
-.stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-.collection { display: grid; gap: 7px; max-height: 365px; overflow: auto; }
-.collection-item {
-  display: flex; align-items: center; gap: 10px; min-width: 0;
-  border: 1px solid #243441; background: #111a23;
-  border-radius: 9px; padding: 9px; cursor: pointer; text-align: left;
-}
-.collection-item:hover { border-color: #49685f; }
-.collection-icon { font-size: 22px; width: 32px; text-align: center; }
-.collection-name { font-size: 11px; font-weight: 700; }
-.collection-type { color: var(--muted); font-size: 9px; }
-.collection-empty { color: var(--muted); font-size: 11px; padding: 10px 0; }
-.log { display: grid; gap: 9px; }
-.log-entry { display: flex; gap: 9px; font-size: 10px; color: var(--muted); }
-.log-entry strong { color: #dce9ef; }
-.log-dot { color: var(--mint); }
-footer { text-align: center; color: #627383; font-size: 10px; padding: 22px; letter-spacing: .6px; }
-@media(max-width:800px) {
-  .layout { grid-template-columns: 1fr; }
-  .elements { grid-template-columns: repeat(4,minmax(0,1fr)); }
-}
-@media(max-width:520px) {
-  header { padding: 0 15px; }
-  main { padding: 24px 12px 40px; }
-  .elements { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .header-right { gap: 8px; }
-  .status { display: none; }
-  .bench { grid-template-columns: 1fr 32px 1fr; padding: 9px; }
-  .panel-body { padding: 13px; }
+@media(max-width:480px) {
+  .brand h1 {font-size:12px;letter-spacing:1px}
+  .brand p {font-size:9px}
+  .logo {width:34px;height:34px}
+  .stat span {font-size:8px}
+  .stage {display:none}
+  .slot {min-height:112px}
 }
 </style>
 </head>
 <body>
+<div class="app">
 <header>
   <div class="brand">
     <div class="logo">⚗</div>
     <div>
-      <div class="brand-name">HAD IT GONE</div>
-      <div class="brand-sub">THE LAB</div>
+      <h1>HAD IT GONE: THE LAB</h1>
+      <p>COMBINE. DISCOVER. EVOLVE.</p>
     </div>
   </div>
   <div class="header-right">
-    <span class="status">● SYSTEM ONLINE</span>
-    <span class="counter" id="header-count">4 discoveries</span>
+    <div class="stat"><strong id="resourceStat">0</strong><span>Stored units</span></div>
+    <div class="stat"><strong id="discoveryStat">2</strong><span>Discoveries</span></div>
+    <div class="stage" id="stageLabel">STAGE 01 · ORIGINS</div>
   </div>
 </header>
 
 <main>
-  <section class="intro">
-    <div class="kicker">EXPERIMENTAL ENVIRONMENT / 001</div>
-    <h1>Nothing is final.<br>Everything can combine.</h1>
-    <p>Explore unknown interactions, create new forms and build your own collection of discoveries.</p>
+  <section class="panel">
+    <div class="panel-head">
+      <div><div class="eyebrow">01 / Extraction</div><h2>INFINITE SOURCES</h2></div>
+      <span class="pill">∞ SUPPLY</span>
+    </div>
+    <div class="panel-body">
+      <p class="section-label">Available sources</p>
+      <div id="sources"></div>
+      <div class="hint">
+        <b style="color:var(--text)">How it works</b><br>
+        Sources never run out. Extract units whenever you need them. Only crafted materials are consumed in experiments.
+      </div>
+      <div class="hint" id="unlockHint">
+        <b style="color:var(--gold)">Research objective</b><br>
+        Discover Fire to unlock a permanent Heat Source.
+      </div>
+    </div>
   </section>
 
-  <div class="layout">
-    <div class="panel">
+  <section class="panel chamber">
+    <div class="panel-head">
+      <div><div class="eyebrow">02 / Experimentation</div><h2>SYNTHESIS CHAMBER</h2></div>
+      <span class="pill" id="experimentCount">0 EXPERIMENTS</span>
+    </div>
+    <div class="chamber-content">
+      <div class="chamber-title">
+        <div class="eyebrow">Select two inventory items</div>
+        <h2>What will you create?</h2>
+        <p>Every combination has a defined, reusable outcome.</p>
+      </div>
+      <div class="slots">
+        <div class="slot" id="slotA"><div class="slot-icon">＋</div><div class="slot-name">Select component</div><div class="slot-sub">First ingredient</div></div>
+        <div class="plus">+</div>
+        <div class="slot" id="slotB"><div class="slot-icon">＋</div><div class="slot-name">Select component</div><div class="slot-sub">Second ingredient</div></div>
+      </div>
+      <div class="result-box">
+        <div class="result-top"><span class="result-title">Predicted outcome</span><span class="result-status" id="reactionStatus">AWAITING INPUT</span></div>
+        <div class="result-name" id="resultName">—</div>
+        <div class="result-description" id="resultDescription">Choose two components from your inventory.</div>
+      </div>
+      <div class="actions">
+        <button class="primary" id="combineBtn" disabled>SYNTHESIZE ↗</button>
+        <button class="secondary" id="clearBtn">CLEAR</button>
+      </div>
+      <div class="feedback" id="feedback">Extract Water and Stone to begin.</div>
+    </div>
+  </section>
+
+  <div class="right-panel">
+    <section class="panel">
       <div class="panel-head">
-        <div>
-          <div class="panel-title">Synthesis Chamber</div>
-          <div class="panel-sub">Select two discovered components to begin.</div>
-        </div>
-        <span class="step">01 / CREATE</span>
+        <div><div class="eyebrow">03 / Resources</div><h2>INVENTORY</h2></div>
+        <span class="count-badge" id="inventoryCount">0 TYPES</span>
       </div>
       <div class="panel-body">
-        <div class="section-label">AVAILABLE COMPONENTS</div>
-        <div id="elements" class="elements"></div>
-        <div class="divider"></div>
-        <div class="section-label">YOUR EXPERIMENT</div>
-        <div class="bench">
-          <div id="slot-a" class="slot"><span class="slot-empty">Select first component</span></div>
-          <div class="plus">+</div>
-          <div id="slot-b" class="slot"><span class="slot-empty">Select second component</span></div>
-        </div>
-        <div class="actions">
-          <button id="combine" class="btn btn-primary" disabled>⚗ Run synthesis</button>
-          <button id="clear" class="btn btn-quiet">Clear selection</button>
-        </div>
-        <div id="result" class="result" aria-live="polite">
-          <div class="result-placeholder">Awaiting components. Your next discovery begins with an experiment.</div>
-        </div>
+        <div id="inventory" class="inventory-list"></div>
       </div>
-    </div>
-
-    <aside class="sidebar-stack">
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">Research Overview</div>
-            <div class="panel-sub">Your current progress</div>
-          </div>
-          <span class="step">02 / STATUS</span>
-        </div>
-        <div class="panel-body">
-          <div class="stats">
-            <div class="stat"><div class="stat-num" id="stat-total">4</div><div class="stat-label">Discovered</div></div>
-            <div class="stat"><div class="stat-num" id="stat-organisms">1</div><div class="stat-label">Life forms</div></div>
-            <div class="stat"><div class="stat-num" id="stat-materials">1</div><div class="stat-label">Materials</div></div>
-            <div class="stat"><div class="stat-num" id="stat-recipes">0</div><div class="stat-label">Experiments</div></div>
-          </div>
-        </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head">
+        <div><div class="eyebrow">04 / Progress</div><h2>DISCOVERY CODEX</h2></div>
+        <span class="count-badge" id="codexCount">2 KNOWN</span>
       </div>
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">Discovery Archive</div>
-            <div class="panel-sub">Select any item to use it again.</div>
-          </div>
-          <span class="step">03 / ARCHIVE</span>
-        </div>
-        <div class="panel-body">
-          <div id="collection" class="collection"></div>
-        </div>
+      <div class="panel-body">
+        <div id="codex" class="codex-list"></div>
       </div>
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">Research Log</div>
-            <div class="panel-sub">Recent experiments</div>
-          </div>
-          <span class="step">04 / LOG</span>
-        </div>
-        <div class="panel-body">
-          <div id="log" class="log"><div class="collection-empty">No experiments recorded yet.</div></div>
-          <div class="actions">
-            <button id="reset" class="btn btn-quiet">Reset laboratory</button>
-          </div>
-        </div>
-      </div>
-    </aside>
+    </section>
   </div>
 </main>
-<footer>HAD IT GONE: THE LAB · A SMALL LABORATORY FOR UNEXPECTED WORLDS</footer>
+
+<footer class="log">
+  <div class="log-head"><span class="eyebrow">Research log</span><button class="secondary" id="resetBtn" style="padding:4px 8px;font-size:9px">RESET LAB</button></div>
+  <div class="log-list" id="logList"></div>
+</footer>
+</div>
 
 <script>
-const SAVE_KEY = "hig-lab-v2";
+const SAVE_KEY = "hig-lab-v03";
 
-const STARTERS = [
-  {id:"water",name:"Water",emoji:"💧",type:"Element",traits:["fluid","life"],desc:"A versatile liquid and a foundation for many living systems."},
-  {id:"stone",name:"Stone",emoji:"🪨",type:"Mineral",traits:["mineral","solid"],desc:"A stable mineral structure with high physical durability."},
-  {id:"energy",name:"Energy",emoji:"⚡",type:"Force",traits:["energy","power"],desc:"A transferable source of activity and transformation."},
-  {id:"cell",name:"Cell",emoji:"🦠",type:"Life",traits:["life","growth"],desc:"A simple living unit capable of growth and adaptation."},
-  {id:"spore",name:"Spore",emoji:"🍄",type:"Life",traits:["life","growth","dormant"],desc:"A dormant life seed waiting for suitable conditions."},
-  {id:"heat",name:"Heat",emoji:"🔥",type:"Force",traits:["heat","energy"],desc:"Thermal energy capable of transforming other components."},
-  {id:"metal",name:"Metal",emoji:"🔩",type:"Material",traits:["metal","solid","conductive"],desc:"A durable material that conducts energy."},
-  {id:"light",name:"Light",emoji:"✨",type:"Force",traits:["light","energy"],desc:"Radiant energy that can power or transform living systems."}
+const ITEMS = {
+  water: {name:"Water", icon:"💧", kind:"Primary source", desc:"A renewable source of liquid.", traits:["liquid"]},
+  stone: {name:"Stone", icon:"🪨", kind:"Primary source", desc:"A renewable source of mineral matter.", traits:["mineral","solid"]},
+  sand: {name:"Sand", icon:"🏖️", kind:"Material", desc:"Loose mineral grains, ready for further transformation.", traits:["mineral","granular","solid"]},
+  mud: {name:"Mud", icon:"🟤", kind:"Material", desc:"A mixture of water and fine mineral particles.", traits:["mineral","liquid","granular"]},
+  gravel: {name:"Gravel", icon:"🪨", kind:"Material", desc:"Coarse fragments of mineral matter.", traits:["mineral","granular","solid"]},
+  flint: {name:"Flint", icon:"🔹", kind:"Material", desc:"A hard stone that can produce sparks.", traits:["mineral","solid","spark-capable"]},
+  sparks: {name:"Sparks", icon:"✨", kind:"Energy", desc:"A brief burst of energy produced by flint.", traits:["energy","hot"]},
+  fire: {name:"Fire", icon:"🔥", kind:"Energy", desc:"A source of heat and transformation.", traits:["energy","hot"]},
+  steam: {name:"Steam", icon:"♨️", kind:"Material", desc:"Water transformed by heat.", traits:["gas","hot","water-derived"]},
+  clay: {name:"Clay", icon:"🧱", kind:"Material", desc:"Fine mineral material shaped by water.", traits:["mineral","malleable","solid"]},
+  glass: {name:"Glass", icon:"🔮", kind:"Material", desc:"A fused, glass-like mineral material.", traits:["mineral","solid","transparent"]},
+  mist: {name:"Mist", icon:"🌫️", kind:"Material", desc:"A cloud of fine water droplets.", traits:["liquid","gas","water-derived"]},
+  heatedStone: {name:"Heated Stone", icon:"🌋", kind:"Material", desc:"Mineral matter carrying thermal energy.", traits:["mineral","solid","hot"]},
+  sediment: {name:"Sediment", icon:"🪹", kind:"Material", desc:"A deposit formed from mixed mineral particles.", traits:["mineral","granular","wet"]},
+  compositeMineral: {name:"Composite Mineral", icon:"💠", kind:"Material", desc:"A new mineral structure formed from two materials.", traits:["mineral","solid","structured"]},
+  nutrientSolution: {name:"Nutrient Solution", icon:"🧪", kind:"Compound", desc:"A mixture that can support future biological experiments.", traits:["liquid","nutrient","reactive"]},
+  chargedMineral: {name:"Charged Mineral", icon:"⚡", kind:"Compound", desc:"Mineral matter infused with energy.", traits:["mineral","energy","reactive"]},
+  fertileClay: {name:"Fertile Clay", icon:"🌱", kind:"Compound", desc:"A mineral mixture with properties suitable for growth.", traits:["mineral","nutrient","wet"]},
+  hybridMatter: {name:"Hybrid Matter", icon:"🧬", kind:"Compound", desc:"A stable new material formed by combining unlike components.", traits:["structured","reactive"]}
+};
+
+const SOURCES = [
+  {id:"water", name:"Water Source", icon:"💧", desc:"Extract a unit of water."},
+  {id:"stone", name:"Stone Source", icon:"🪨", desc:"Extract a unit of stone."},
+  {id:"heat", name:"Thermal Vent", icon:"♨️", desc:"Extract a unit of heat.", unlock:"fire"}
 ];
 
-const RECIPES = [
-  {a:"cell",b:"water",id:"aquacell",name:"Aquacell",emoji:"🫧",type:"Organism",traits:["life","fluid","growth"],desc:"A simple organism adapted to a watery environment."},
-  {a:"cell",b:"stone",id:"mineralcell",name:"Mineral Cell",emoji:"🔬",type:"Organism",traits:["life","mineral","solid"],desc:"A living cell protected by a rigid mineral shell."},
-  {a:"cell",b:"energy",id:"sparkcell",name:"Spark Cell",emoji:"⚡",type:"Organism",traits:["life","energy","growth"],desc:"An energetic organism that stores and releases bursts of power."},
-  {a:"metal",b:"heat",id:"alloy",name:"Living Alloy",emoji:"🧲",type:"Material",traits:["metal","solid","heat-resistant"],desc:"A transformed metal structure with improved resistance to heat."},
-  {a:"stone",b:"heat",id:"obsidian",name:"Obsidian",emoji:"🖤",type:"Material",traits:["mineral","solid","heat-resistant"],desc:"A dark, glass-like material formed by intense heat in this fictional lab."},
-  {a:"light",b:"spore",id:"glowspore",name:"Glowspore",emoji:"🍄",type:"Organism",traits:["life","light","growth"],desc:"A spore that develops a luminous structure."},
-  {a:"spore",b:"water",id:"moss",name:"Moss Colony",emoji:"🌿",type:"Organism",traits:["life","fluid","growth"],desc:"A spreading colony that thrives in damp conditions."},
-  {a:"energy",b:"metal",id:"chargedmetal",name:"Charged Alloy",emoji:"🔋",type:"Material",traits:["metal","energy","conductive"],desc:"A conductive material that stores an energetic charge."},
-  {a:"energy",b:"stone",id:"crystal",name:"Energy Crystal",emoji:"💎",type:"Material",traits:["mineral","energy","light"],desc:"A crystal-like structure that stores energy in the fictional rules of the lab."},
-  {a:"light",b:"water",id:"luminousfluid",name:"Luminous Fluid",emoji:"🌊",type:"Material",traits:["fluid","light","energy"],desc:"A glowing fluid that carries radiant energy."},
-  {a:"aquacell",b:"light",id:"photosynth",name:"Sunweaver",emoji:"🌱",type:"Organism",traits:["life","light","growth"],desc:"An aquatic organism able to convert light into stored energy."},
-  {a:"aquacell",b:"energy",id:"bioelectric",name:"Bioelectric Life",emoji:"🪼",type:"Organism",traits:["life","fluid","energy"],desc:"An organism that generates electrical pulses through its body."},
-  {a:"crystal",b:"aquacell",id:"crystallife",name:"Crystal Organism",emoji:"🧬",type:"Organism",traits:["life","mineral","light","growth"],desc:"A fictional life form combining a mineral framework with living tissue."},
-  {a:"glowspore",b:"water",id:"glowmoss",name:"Luminous Moss",emoji:"🌌",type:"Organism",traits:["life","light","fluid","growth"],desc:"A glowing colony that spreads across wet surfaces."},
-  {a:"mineralcell",b:"heat",id:"ceramiclife",name:"Ceramic Life",emoji:"🏺",type:"Organism",traits:["life","mineral","heat-resistant"],desc:"A life form with a heat-resistant outer structure."},
-  {a:"sparkcell",b:"metal",id:"conductiveorganism",name:"Conductive Organism",emoji:"🦾",type:"Organism",traits:["life","metal","energy"],desc:"A fictional organism that uses conductive structures to distribute energy."}
+const RECIPES = {
+  "stone|water": {out:"sand", why:"Water and stone produce loose mineral grains in this simplified world."},
+  "stone|stone": {out:"flint", why:"Two stones form a flint-like material."},
+  "flint|stone": {out:"sparks", why:"Striking flint against stone produces sparks."},
+  "sand|sparks": {out:"fire", why:"Sparks ignite the available mineral dust in this experimental world."},
+  "fire|water": {out:"steam", why:"Heat transforms water into steam."},
+  "sand|water": {out:"mud", why:"Water binds loose mineral grains into mud."},
+  "sand|stone": {out:"gravel", why:"The mixture forms a coarser mineral aggregate."},
+  "mud|stone": {out:"clay", why:"Further processing produces a fine, malleable mineral material."},
+  "fire|sand": {out:"glass", why:"Heat fuses the sand into glass-like material."},
+  "water|water": {out:"mist", why:"The source material condenses into a fine water mist."},
+  "fire|stone": {out:"heatedStone", why:"Fire transfers heat into the stone."},
+  "heat|stone": {out:"heatedStone", why:"Thermal energy heats the mineral."},
+  "heat|water": {out:"steam", why:"Thermal energy transforms water into steam."},
+  "heat|sand": {out:"glass", why:"Heat fuses sand into glass-like material."},
+  "heat|mud": {out:"clay", why:"Heat dries and transforms the wet mineral mixture."},
+  "clay|water": {out:"fertileClay", why:"The mineral mixture becomes a water-rich growth medium."},
+  "mud|water": {out:"sediment", why:"The mixture settles into mineral sediment."},
+  "clay|sand": {out:"compositeMineral", why:"The two mineral materials form a composite."},
+  "glass|stone": {out:"compositeMineral", why:"The materials form a structured mineral composite."},
+  "fire|mud": {out:"clay", why:"Heat transforms the mineral mixture."},
+  "fire|glass": {out:"compositeMineral", why:"Further heating changes the material structure."},
+  "fire|flint": {out:"heatedStone", why:"The mineral absorbs thermal energy."},
+  "mist|stone": {out:"sediment", why:"Moisture and mineral particles settle together."},
+  "mist|sand": {out:"mud", why:"Water droplets bind the sand grains."},
+  "gravel|water": {out:"sediment", why:"Water separates and deposits mineral particles."},
+  "flint|water": {out:"sediment", why:"The mineral surface breaks down into a wet deposit."}
+};
+
+const FALLBACKS = [
+  {needs:["liquid","mineral"],out:"sediment",why:"Liquid and mineral matter form a deposit."},
+  {needs:["hot","liquid"],out:"steam",why:"Thermal energy transforms the liquid."},
+  {needs:["mineral","energy"],out:"chargedMineral",why:"Energy changes the mineral's properties."},
+  {needs:["nutrient","mineral"],out:"fertileClay",why:"Mineral matter combines with growth-supporting material."},
+  {needs:["liquid","liquid"],out:"mist",why:"The liquids form a fine suspended mixture."},
+  {needs:["mineral","mineral"],out:"compositeMineral",why:"The materials form a composite mineral structure."},
+  {needs:["energy","energy"],out:"fire",why:"The energy sources combine into a stronger thermal reaction."}
 ];
 
-const keyOf = (a,b) => [a,b].sort().join("+");
-const recipeMap = new Map(RECIPES.map(r => [keyOf(r.a,r.b),r]));
+const freshState = () => ({
+  inventory:{}, discovered:["water","stone"], experiments:0,
+  unlocked:["water","stone"], log:["Lab initialized. Water and Stone sources are online."]
+});
+let state;
+try {
+  state = JSON.parse(localStorage.getItem(SAVE_KEY)) || freshState();
+  if (!state.inventory || !state.discovered || !state.unlocked) state = freshState();
+} catch { state = freshState(); }
 
-let items = [];
 let selected = [];
-let experiments = [];
-let logEntries = [];
 
-function freshState() {
-  items = STARTERS.map(x => ({...x,starter:true}));
-  selected = [];
-  experiments = [];
-  logEntries = [];
-}
 function save() {
-  try {
-    localStorage.setItem(SAVE_KEY,JSON.stringify({items,experiments,logEntries}));
-  } catch(e) {
-    console.warn("Progress could not be saved.",e);
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch {}
+}
+function item(id) { return ITEMS[id] || ITEMS.hybridMatter; }
+function keyOf(a,b) { return [a,b].sort().join("|"); }
+function count(id) { return state.inventory[id] || 0; }
+function add(id, amount=1) {
+  state.inventory[id] = count(id) + amount;
+}
+function consume(id, amount=1) {
+  state.inventory[id] = Math.max(0,count(id)-amount);
+  if (!state.inventory[id]) delete state.inventory[id];
+}
+function note(message) {
+  state.log.unshift(message);
+  state.log = state.log.slice(0,12);
+}
+function unlockSources() {
+  if (state.discovered.includes("fire") && !state.unlocked.includes("heat")) {
+    state.unlocked.push("heat");
+    note("NEW SOURCE UNLOCKED: Thermal Vent.");
   }
 }
-function load() {
-  try {
-    const data = JSON.parse(localStorage.getItem(SAVE_KEY));
-    if (data && Array.isArray(data.items) &&
-        STARTERS.every(s => data.items.some(i => i.id === s.id))) {
-      items = data.items;
-      experiments = Array.isArray(data.experiments) ? data.experiments : [];
-      logEntries = Array.isArray(data.logEntries) ? data.logEntries : [];
+function recipeFor(a,b) {
+  const explicit = RECIPES[keyOf(a,b)];
+  if (explicit) return explicit;
+  const traits = [...new Set([...item(a).traits,...item(b).traits])];
+  for (const rule of FALLBACKS) {
+    if (rule.needs.every(t => traits.includes(t))) return {out:rule.out,why:rule.why};
+  }
+  return {out:"hybridMatter",why:"The components form a stable hybrid material with combined properties."};
+}
+function extract(id) {
+  if (id === "heat" && !state.unlocked.includes("heat")) return;
+  add(id);
+  if (!state.discovered.includes(id)) state.discovered.push(id);
+  note("Extracted 1 unit of " + item(id).name + ".");
+  render();
+  selectFeedback("Extracted " + item(id).name + ". Source remains infinite.");
+}
+function selectItem(id) {
+  if (count(id) < 1) return;
+  if (selected.length === 0) {
+    selected = [id];
+  } else if (selected.length === 1) {
+    if (selected[0] === id && count(id) < 2) {
+      selectFeedback("You need two units to combine a component with itself.");
       return;
     }
-  } catch(e) {}
-  freshState();
-  save();
-}
-function getItem(id) { return items.find(x => x.id === id); }
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[c]);
-}
-function renderElements() {
-  const root = document.getElementById("elements");
-  root.innerHTML = "";
-  items.forEach(item => {
-    const button = document.createElement("button");
-    button.className = "element" + (selected.includes(item.id) ? " selected" : "");
-    button.setAttribute("aria-pressed",String(selected.includes(item.id)));
-    button.innerHTML = `
-      <span class="element-icon">${item.emoji}</span>
-      <span class="element-name">${escapeHTML(item.name)}</span>
-      <span class="element-type">${escapeHTML(item.type)}</span>
-      <span class="trait-row">${item.traits.slice(0,2).map(t=>`<span class="trait">${escapeHTML(t)}</span>`).join("")}</span>`;
-    button.addEventListener("click",()=>toggleSelection(item.id));
-    root.appendChild(button);
-  });
-}
-function renderSlots() {
-  ["a","b"].forEach((slot,index)=>{
-    const item = selected[index] ? getItem(selected[index]) : null;
-    const el = document.getElementById("slot-"+slot);
-    el.innerHTML = item
-      ? `<span class="slot-icon">${item.emoji}</span><span class="slot-name">${escapeHTML(item.name)}</span>`
-      : `<span class="slot-empty">Select ${index===0?"first":"second"} component</span>`;
-  });
-  document.getElementById("combine").disabled = selected.length !== 2;
-}
-function renderCollection() {
-  const root = document.getElementById("collection");
-  root.innerHTML = "";
-  items.forEach(item=>{
-    const button = document.createElement("button");
-    button.className = "collection-item";
-    button.innerHTML = `
-      <span class="collection-icon">${item.emoji}</span>
-      <span style="min-width:0"><span class="collection-name">${escapeHTML(item.name)}</span><br>
-      <span class="collection-type">${escapeHTML(item.type)} · ${item.traits.length} traits</span></span>`;
-    button.addEventListener("click",()=>toggleSelection(item.id));
-    root.appendChild(button);
-  });
-  document.getElementById("header-count").textContent = `${items.length} discoveries`;
-  document.getElementById("stat-total").textContent = items.length;
-  document.getElementById("stat-organisms").textContent = items.filter(x=>x.type==="Organism"||x.type==="Life").length;
-  document.getElementById("stat-materials").textContent = items.filter(x=>x.type==="Material"||x.type==="Mineral").length;
-  document.getElementById("stat-recipes").textContent = experiments.length;
-}
-function renderLog() {
-  const root = document.getElementById("log");
-  if (!logEntries.length) {
-    root.innerHTML = '<div class="collection-empty">No experiments recorded yet.</div>';
-    return;
-  }
-  root.innerHTML = logEntries.slice(0,6).map(entry=>`
-    <div class="log-entry"><span class="log-dot">✦</span><span>${escapeHTML(entry)}</span></div>
-  `).join("");
-}
-function render() {
-  renderElements();
-  renderSlots();
-  renderCollection();
-  renderLog();
-}
-function toggleSelection(id) {
-  if (selected.includes(id)) selected = selected.filter(x=>x!==id);
-  else if (selected.length < 2) selected.push(id);
-  else selected = [selected[1],id];
-  render();
-}
-function showMessage(title,description,type="") {
-  const root = document.getElementById("result");
-  root.className = "result "+type;
-  root.innerHTML = `<div class="result-placeholder"><strong>${escapeHTML(title)}</strong><br>${escapeHTML(description)}</div>`;
-}
-function showItem(item,isNew) {
-  const root = document.getElementById("result");
-  root.className = "result success";
-  root.innerHTML = `
-    <div class="result-top">
-      <div class="result-icon">${item.emoji}</div>
-      <div>
-        <div class="result-type">${isNew?"NEW DISCOVERY":"ALREADY DISCOVERED"}</div>
-        <div class="result-name">${escapeHTML(item.name)}</div>
-      </div>
-    </div>
-    <p class="result-desc">${escapeHTML(item.desc)}</p>
-    <div class="trait-row">${item.traits.map(t=>`<span class="trait">${escapeHTML(t)}</span>`).join("")}</div>`;
-}
-function synthesize(a,b) {
-  const key = keyOf(a.id,b.id);
-  const known = recipeMap.get(key);
-  if (known) return {...known,recipe:key};
-
-  // General rules create new outcomes only when component traits
-  // support a coherent interaction.
-  const traits = new Set([...a.traits,...b.traits]);
-  const life = traits.has("life");
-  const fluid = traits.has("fluid");
-  const light = traits.has("light");
-  const mineral = traits.has("mineral");
-  const heat = traits.has("heat");
-  const metal = traits.has("metal");
-  const energy = traits.has("energy") || traits.has("power");
-  const growth = traits.has("growth");
-
-  let name,emoji,type,desc,newTraits;
-
-  if (life && fluid && light && growth) {
-    name = "Radiant Colony"; emoji = "🌌"; type = "Organism";
-    desc = "A light-emitting colony that spreads through a fluid environment.";
-    newTraits = ["life","fluid","light","growth"];
-  } else if (life && fluid && growth) {
-    name = "Aquatic Colony"; emoji = "🪸"; type = "Organism";
-    desc = "A colony adapted to wet conditions, capable of spreading and growing.";
-    newTraits = ["life","fluid","growth"];
-  } else if (life && light) {
-    name = "Luminous Organism"; emoji = "🪼"; type = "Organism";
-    desc = "A fictional life form that produces or stores light.";
-    newTraits = ["life","light","growth"];
-  } else if (life && mineral && heat) {
-    name = "Thermal Shell Organism"; emoji = "🐚"; type = "Organism";
-    desc = "A life form protected by a mineral structure suited to hot environments.";
-    newTraits = ["life","mineral","heat-resistant"];
-  } else if (mineral && heat) {
-    name = "Fused Mineral"; emoji = "🔶"; type = "Material";
-    desc = "A dense mineral material transformed by thermal energy.";
-    newTraits = ["mineral","solid","heat-resistant"];
-  } else if (metal && energy) {
-    name = "Energized Conductor"; emoji = "🔋"; type = "Material";
-    desc = "A conductive material capable of carrying or storing energy.";
-    newTraits = ["metal","energy","conductive"];
-  } else if (mineral && energy) {
-    name = "Resonant Crystal"; emoji = "💠"; type = "Material";
-    desc = "A mineral structure that interacts with stored energy.";
-    newTraits = ["mineral","energy","solid"];
-  } else if (life && growth && energy) {
-    name = "Reactive Organism"; emoji = "🧬"; type = "Organism";
-    desc = "An active life form that uses energy to support growth.";
-    newTraits = ["life","growth","energy"];
-  } else if (fluid && energy) {
-    name = "Charged Fluid"; emoji = "🫧"; type = "Material";
-    desc = "A fluid carrying an energetic charge in the lab's fictional system.";
-    newTraits = ["fluid","energy","power"];
+    selected.push(id);
   } else {
-    return null;
+    selected = [id];
   }
-
-  // Stable IDs mean the same pair always produces the same discovery.
-  return {
-    id:"synth-"+key,
-    a:a.id,b:b.id,recipe:key,name,emoji,type,desc,
-    traits:newTraits
-  };
+  render();
 }
 function combine() {
-  if (selected.length!==2) return;
-  const a=getItem(selected[0]), b=getItem(selected[1]);
-  if (!a || !b) return;
-  if (a.id===b.id) {
-    showMessage("No new synthesis","Use two different components to begin an experiment.","error");
-    return;
+  if (selected.length !== 2) return;
+  const [a,b] = selected;
+  if (count(a) < 1 || count(b) < (a === b ? 2 : 1)) {
+    selectFeedback("Not enough material. Extract more from an infinite source.");
+    selected = []; render(); return;
   }
-
-  const key=keyOf(a.id,b.id);
-  const existingRecipe=experiments.includes(key);
-  const output=synthesize(a,b);
-
-  if (!output) {
-    showMessage(
-      "No stable reaction",
-      `${a.name} and ${b.name} do not form a stable discovery under the current lab rules. Try components with compatible traits.`
-    );
-    logEntries.unshift(`${a.name} + ${b.name}: no stable reaction`);
-    logEntries=logEntries.slice(0,20);
-    save(); renderLog();
-    return;
+  const reaction = recipeFor(a,b);
+  consume(a);
+  consume(b);
+  add(reaction.out);
+  state.experiments++;
+  if (!state.discovered.includes(reaction.out)) {
+    state.discovered.push(reaction.out);
+    note("NEW DISCOVERY: " + item(reaction.out).name + ".");
+  } else {
+    note("Synthesized " + item(reaction.out).name + ".");
   }
-
-  let item=items.find(x=>x.id===output.id);
-  let isNew=false;
-  if (!item) {
-    item={...output,recipe:key,createdAt:Date.now()};
-    items.push(item);
-    isNew=true;
-  }
-  if (!existingRecipe) experiments.push(key);
-
-  logEntries.unshift(`${a.name} + ${b.name} → ${item.name}${isNew?" · discovered":""}`);
-  logEntries=logEntries.slice(0,20);
+  unlockSources();
+  selected = [];
   save();
-  showItem(item,isNew);
-  selected=[];
   render();
+  selectFeedback("Reaction complete: " + item(reaction.out).name + " added to inventory.");
 }
-document.getElementById("combine").addEventListener("click",combine);
-document.getElementById("clear").addEventListener("click",()=>{
-  selected=[];
-  render();
-});
-document.getElementById("reset").addEventListener("click",()=>{
-  if (!confirm("Reset the lab and erase all saved discoveries?")) return;
-  localStorage.removeItem(SAVE_KEY);
-  freshState();
+function selectFeedback(message) {
+  document.getElementById("feedback").textContent = message;
+}
+function renderSources() {
+  const root = document.getElementById("sources");
+  root.innerHTML = "";
+  SOURCES.filter(s => state.unlocked.includes(s.id)).forEach(s => {
+    const b = document.createElement("button");
+    b.className = "source-card";
+    b.innerHTML = `<span class="source-icon">${s.icon}</span><span><span class="source-name">${s.name}</span><span class="source-desc">${s.desc}</span><span class="collect">＋ EXTRACT UNIT</span></span>`;
+    b.onclick = () => extract(s.id);
+    root.appendChild(b);
+  });
+  document.getElementById("unlockHint").innerHTML = state.unlocked.includes("heat")
+    ? "<b style='color:var(--accent)'>New source online</b><br>The Thermal Vent is now available permanently."
+    : "<b style='color:var(--gold)'>Research objective</b><br>Discover Fire to unlock a permanent Heat Source.";
+}
+function renderInventory() {
+  const root = document.getElementById("inventory");
+  root.innerHTML = "";
+  const ids = Object.keys(state.inventory).filter(id => count(id)>0).sort((a,b)=>item(a).name.localeCompare(item(b).name));
+  document.getElementById("inventoryCount").textContent = ids.length + " TYPES";
+  if (!ids.length) root.innerHTML = '<div class="empty">Your inventory is empty.<br>Extract Water and Stone to begin experimenting.</div>';
+  ids.forEach(id => {
+    const b = document.createElement("button");
+    b.className = "inv-item" + (selected.includes(id) ? " selected" : "");
+    b.innerHTML = `<span class="inv-icon">${item(id).icon}</span><span><span class="inv-name">${item(id).name}</span><span class="inv-type">${item(id).kind}</span></span><span class="inv-count">×${count(id)}</span>`;
+    b.onclick = () => selectItem(id);
+    root.appendChild(b);
+  });
+}
+function renderSlot(slotId,id,number) {
+  const root = document.getElementById(slotId);
+  if (!id) {
+    root.className = "slot";
+    root.innerHTML = '<div class="slot-icon">＋</div><div class="slot-name">Select component</div><div class="slot-sub">Ingredient '+number+'</div>';
+    return;
+  }
+  root.className = "slot filled";
+  root.innerHTML = `<div class="slot-icon">${item(id).icon}</div><div class="slot-name">${item(id).name}</div><div class="slot-sub">×${selected.filter(x=>x===id).length} selected</div>`;
+}
+function renderReaction() {
+  const ready = selected.length === 2;
+  renderSlot("slotA",selected[0],1);
+  renderSlot("slotB",selected[1],2);
+  const name = document.getElementById("resultName");
+  const desc = document.getElementById("resultDescription");
+  const status = document.getElementById("reactionStatus");
+  if (!ready) {
+    name.textContent = "—";
+    desc.textContent = selected.length === 1 ? "Choose a second component from your inventory." : "Choose two components from your inventory.";
+    status.textContent = selected.length ? "ONE MORE" : "AWAITING INPUT";
+    document.getElementById("combineBtn").disabled = true;
+    return;
+  }
+  const r = recipeFor(selected[0],selected[1]);
+  name.textContent = item(r.out).icon + " " + item(r.out).name;
+  desc.textContent = r.why;
+  status.textContent = state.discovered.includes(r.out) ? "KNOWN REACTION" : "NEW DISCOVERY";
+  document.getElementById("combineBtn").disabled = false;
+}
+function renderCodex() {
+  const root = document.getElementById("codex");
+  root.innerHTML = "";
+  const ids = [...state.discovered].sort((a,b)=>item(a).name.localeCompare(item(b).name));
+  document.getElementById("codexCount").textContent = ids.length + " KNOWN";
+  ids.forEach(id => {
+    const row = document.createElement("div");
+    row.className = "codex-entry";
+    row.innerHTML = `<span class="codex-icon">${item(id).icon}</span><span><div class="codex-name">${item(id).name}</div><div class="codex-kind">${item(id).kind}${count(id) ? " · Owned: "+count(id) : " · Not in inventory"}</div></span>`;
+    root.appendChild(row);
+  });
+}
+function renderLog() {
+  const root = document.getElementById("logList");
+  root.innerHTML = "";
+  state.log.slice(0,8).forEach(entry => {
+    const el = document.createElement("span");
+    el.className = "log-entry";
+    el.textContent = entry;
+    root.appendChild(el);
+  });
+}
+function render() {
+  renderSources();
+  renderInventory();
+  renderReaction();
+  renderCodex();
+  renderLog();
+  const total = Object.values(state.inventory).reduce((a,b)=>a+b,0);
+  document.getElementById("resourceStat").textContent = total;
+  document.getElementById("discoveryStat").textContent = state.discovered.length;
+  document.getElementById("experimentCount").textContent = state.experiments + " EXPERIMENTS";
+  document.getElementById("stageLabel").textContent = state.unlocked.includes("heat") ? "STAGE 02 · TRANSFORMATION" : "STAGE 01 · ORIGINS";
   save();
-  render();
-  showMessage("Laboratory reset","Your next discovery begins with the starter components.");
+}
+
+document.getElementById("combineBtn").addEventListener("click",combine);
+document.getElementById("clearBtn").addEventListener("click",()=>{
+  selected=[]; render(); selectFeedback("Selection cleared.");
 });
-load();
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if (!confirm("Reset the Lab? All inventory, discoveries and progress will be lost.")) return;
+  state=freshState(); selected=[]; render(); selectFeedback("Lab reset. Begin again with Water and Stone.");
+});
 render();
 </script>
 </body>
