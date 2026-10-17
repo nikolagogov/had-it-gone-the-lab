@@ -1,934 +1,175 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HAD IT GONE: THE LAB</title>
 <style>
-:root {
-  --bg:#091116; --panel:#111d24; --panel2:#17262e;
-  --line:#263a43; --text:#e6f2f3; --muted:#8199a2;
-  --accent:#64e0c0; --blue:#70bfff; --gold:#f1c779;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0; height:100vh; overflow:hidden; color:var(--text);
-  background:radial-gradient(ellipse at 50% -20%,#19363d 0%,var(--bg) 55%);
-  font:14px/1.4 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;
-}
-button { font:inherit; cursor:pointer; }
-button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
-.app { height:100dvh; display:flex; flex-direction:column; min-height:0; }
-header {
-  height:70px; flex-shrink:0; padding:0 24px; display:flex;
-  align-items:center; justify-content:space-between;
-  border-bottom:1px solid var(--line); background:#0b161ce8;
-}
-.brand { display:flex; align-items:center; gap:13px; }
-.logo {
-  width:40px;height:40px;display:grid;place-items:center;
-  border:1px solid #367d75;border-radius:12px;
-  background:linear-gradient(145deg,#1c514d,#14252e);
-  font-size:22px;box-shadow:0 0 24px #55e0b41c;
-}
-.brand h1 { font-size:16px; letter-spacing:2px; margin:0; }
-.brand p { margin:3px 0 0; color:var(--muted); font-size:11px; letter-spacing:1px; }
-.header-right { display:flex; align-items:center; gap:22px; }
-.stat { text-align:right; }
-.stat strong { display:block;font-size:16px;color:var(--accent); }
-.stat span { color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px; }
-.stage { color:var(--gold);font-size:11px;letter-spacing:1px; }
-main {
-  flex:1; min-height:0; padding:14px;
-  display:grid; grid-template-columns:minmax(205px,0.82fr) minmax(350px,1.55fr) minmax(250px,1fr);
-  gap:14px;
-}
-.panel {
-  min-height:0; min-width:0; display:flex; flex-direction:column;
-  border:1px solid var(--line); border-radius:15px;
-  background:linear-gradient(160deg,#14232b,#0f1a20 75%);
-  overflow:hidden;
-}
-.panel-head {
-  padding:15px 16px 12px; border-bottom:1px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-}
-.eyebrow { color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase; }
-.panel-head h2 { font-size:13px;letter-spacing:1.2px;margin:4px 0 0; }
-.pill { border:1px solid #2e5d58;color:var(--accent);padding:4px 7px;border-radius:6px;font-size:10px;white-space:nowrap; }
-.panel-body { padding:13px; overflow:auto; min-height:0; }
-.section-label { margin:0 0 9px;color:var(--muted);font-size:10px;letter-spacing:1.4px;text-transform:uppercase; }
-.source-card {
-  width:100%;display:flex;align-items:center;gap:11px;text-align:left;
-  padding:11px;margin-bottom:9px;border:1px solid #29434b;
-  border-radius:11px;background:#172a32;color:var(--text);
-  transition:.15s;
-}
-.source-card:hover { border-color:#5bafa0;background:#1b343b;transform:translateY(-1px); }
-.source-icon {
-  width:43px;height:43px;flex-shrink:0;display:grid;place-items:center;
-  border-radius:10px;background:#213d46;font-size:25px;
-}
-.source-name { display:block;font-weight:650;font-size:12px; }
-.source-desc { display:block;color:var(--muted);font-size:10px;margin-top:3px; }
-.collect { display:block;color:var(--accent);font-size:10px;margin-top:5px; }
-.hint {
-  border:1px dashed #31454c;border-radius:10px;padding:11px;
-  color:var(--muted);font-size:11px;line-height:1.6;margin-top:10px;
-}
-.chamber { background:radial-gradient(ellipse at 50% 38%,#18343b 0%,#101d24 60%); }
-.chamber-content {
-  flex:1;min-height:0;padding:18px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:14px;
-}
-.chamber-title { text-align:center; }
-.chamber-title h2 { margin:5px 0;font-size:19px;letter-spacing:1px; }
-.chamber-title p { color:var(--muted);margin:0;font-size:11px; }
-.slots { width:100%;display:grid;grid-template-columns:1fr 30px 1fr;align-items:center;gap:7px; }
-.slot {
-  min-height:130px;border:1px dashed #38535d;border-radius:13px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:7px;padding:10px;background:#0d1a20;
-}
-.slot.filled { border-style:solid;border-color:#39796e;background:linear-gradient(145deg,#183c3a,#11262c); }
-.slot-icon { font-size:37px;line-height:1.1; }
-.slot-name { font-size:12px;font-weight:650;text-align:center; }
-.slot-sub { color:var(--muted);font-size:10px; }
-.plus { text-align:center;color:#66838b;font-size:20px; }
-.result-box {
-  width:100%;border:1px solid var(--line);border-radius:12px;
-  padding:12px 14px;background:#0c181e;min-height:76px;
-}
-.result-top { display:flex;justify-content:space-between;align-items:center;gap:8px; }
-.result-title { font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase; }
-.result-name { font-size:14px;font-weight:700;margin-top:5px; }
-.result-description { font-size:11px;color:var(--muted);margin-top:4px; }
-.result-status { color:var(--gold);font-size:10px; }
-.actions { width:100%;display:flex;gap:8px; }
-.primary,.secondary {
-  border-radius:9px;padding:12px 10px;font-weight:700;font-size:11px;
-  letter-spacing:.6px;transition:.15s;
-}
-.primary { flex:1;background:var(--accent);color:#08221e;border:1px solid var(--accent); }
-.primary:hover:not(:disabled) { background:#a0f4dc; }
-.primary:disabled { opacity:.35;cursor:not-allowed; }
-.secondary { background:#17272e;color:#b7cbd0;border:1px solid #344952; }
-.secondary:hover { border-color:#718e95; }
-.feedback { min-height:16px;color:var(--muted);font-size:11px;text-align:center; }
-.right-panel { display:grid;grid-template-rows:minmax(0,1.05fr) minmax(0,1fr);gap:14px;min-height:0; }
-.right-panel .panel { min-height:0; }
-.count-badge { color:var(--accent);font-size:10px; }
-.inventory-list,.codex-list,.log-list { display:flex;flex-direction:column;gap:7px; }
-.inv-item {
-  width:100%;display:flex;align-items:center;gap:9px;text-align:left;
-  border:1px solid #293e46;border-radius:9px;padding:8px;
-  background:#14242b;color:var(--text);
-}
-.inv-item:hover { border-color:#64838b; }
-.inv-item.selected { border-color:var(--accent);background:#183a37;box-shadow:inset 0 0 0 1px #64e0c022; }
-.inv-icon { width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:#213740;font-size:20px;flex-shrink:0; }
-.inv-name { font-size:11px;font-weight:650;display:block; }
-.inv-type { color:var(--muted);font-size:10px;display:block;margin-top:2px; }
-.inv-count { margin-left:auto;color:var(--accent);font-size:12px;font-weight:700; }
-.empty { color:var(--muted);font-size:11px;padding:12px 4px;line-height:1.6; }
-.codex-entry { display:flex;align-items:center;gap:9px;padding:6px 2px;border-bottom:1px solid #22343b; }
-.codex-entry:last-child { border-bottom:0; }
-.codex-icon { font-size:21px;width:29px;text-align:center; }
-.codex-name { font-size:11px;font-weight:650; }
-.codex-kind { color:var(--muted);font-size:10px;margin-top:2px; }
-.log { border-top:1px solid var(--line);padding:10px 15px;background:#0b171c;flex-shrink:0; }
-.log-head { display:flex;justify-content:space-between;align-items:center;margin-bottom:6px; }
-.log-list { flex-direction:row;gap:8px;overflow:auto;white-space:nowrap; }
-.log-entry { color:#9db3ba;font-size:10px;padding:5px 8px;background:#13232a;border-radius:5px; }
-.log-entry b { color:var(--accent);font-weight:600; }
-.toast { color:var(--accent); }
-@media(max-width:900px) {
-  body { height:auto;min-height:100vh;overflow:auto; }
-  .app { height:auto;min-height:100vh; }
-  header { padding:0 13px;height:64px; }
-  .header-right { gap:10px; }
-  main { grid-template-columns:1fr; }
-  .panel { min-height:260px; }
-  .right-panel { grid-template-rows:auto auto; }
-  .chamber-content { min-height:400px; }
-  .log { position:relative; }
-}
-@media(max-width:480px) {
-  .brand h1 {font-size:12px;letter-spacing:1px}
-  .brand p {font-size:9px}
-  .logo {width:34px;height:34px}
-  .stat span {font-size:8px}
-  .stage {display:none}
-  .slot {min-height:112px}
-}
+:root{color-scheme:dark;--bg:#080b10;--panel:#101620;--panel2:#151e2a;--line:#263242;--text:#edf3fa;--muted:#93a3b7;--cyan:#6be0d1;--blue:#80b9ff;--amber:#ffbd70;--red:#ff8b83;--green:#a8e6a1;--radius:16px}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 48% -20%,#1a2c3e 0,transparent 45%),var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}button{font:inherit;cursor:pointer}button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.app{max-width:1600px;margin:auto;padding:22px;min-height:100vh;display:flex;flex-direction:column;gap:18px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding:0 2px 18px}.brand{display:flex;align-items:center;gap:13px}.brandmark{width:42px;height:42px;border:1px solid #3a6572;border-radius:13px;display:grid;place-items:center;color:var(--cyan);font-size:22px;background:linear-gradient(135deg,#16343b,#111a26)}.eyebrow{font-size:10px;letter-spacing:.2em;color:var(--cyan);font-weight:800}.brand h1{font-size:18px;letter-spacing:.11em;margin:2px 0 0;font-weight:800}.tagline{color:var(--muted);font-size:12px;margin-top:3px}.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);font-size:11px;letter-spacing:.05em}.btn{border:1px solid var(--line);border-radius:10px;background:#17212e;color:var(--text);padding:9px 12px;font-weight:650;transition:.15s}.btn:hover{background:#202e3e;border-color:#42566b}.btn.primary{background:var(--cyan);color:#071413;border-color:var(--cyan)}.btn.primary:hover{background:#91f0e3}.btn.danger{color:#ffaaa2}.workspace{display:grid;grid-template-columns:minmax(225px,.8fr) minmax(370px,1.3fr) minmax(270px,1fr);gap:16px;flex:1;align-items:stretch}.panel{background:linear-gradient(180deg,rgba(19,27,39,.96),rgba(13,19,28,.97));border:1px solid var(--line);border-radius:var(--radius);min-width:0;overflow:hidden}.panel-head{padding:16px 17px 13px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}.panel-head h2{margin:0;font-size:12px;letter-spacing:.15em;text-transform:uppercase}.kicker{color:var(--muted);font-size:11px}.panel-body{padding:15px}.source-list{display:grid;gap:9px}.source{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:11px;border:1px solid var(--line);background:#111a25;border-radius:12px;color:var(--text)}.source:hover{border-color:#55758a;background:#172433}.source .symbol,.item-symbol{width:42px;height:42px;flex:none;border-radius:11px;display:grid;place-items:center;font-size:23px;background:#1b2938;border:1px solid #2a3a4d}.source .meta{flex:1;min-width:0}.source strong{display:block;font-size:13px}.source small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.infinite{font-size:9px;letter-spacing:.08em;color:var(--cyan);border:1px solid #315a5a;border-radius:5px;padding:3px 5px}.hint{margin-top:13px;color:var(--muted);font-size:11px;line-height:1.55}.center-panel{display:flex;flex-direction:column}.chamber{padding:18px;display:flex;flex-direction:column;gap:15px;flex:1}.chamber-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.chamber-top h3{font-size:13px;margin:0}.chamber-top p{margin:3px 0 0;color:var(--muted);font-size:11px}.slots{display:grid;grid-template-columns:1fr 28px 1fr;align-items:center;gap:8px}.slot{min-height:138px;border:1px dashed #3a4c60;border-radius:15px;background:radial-gradient(circle at 50% 25%,#1d2d3d,#101721 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;padding:12px;position:relative}.slot.filled{border-style:solid;border-color:#4e8b8a;background:radial-gradient(circle at 50% 25%,#203e43,#111b25 70%)}.slot .slot-symbol{font-size:31px}.slot .slot-label{font-size:12px;font-weight:700}.slot .slot-origin{font-size:10px;color:var(--muted)}.slot .remove{position:absolute;right:7px;top:6px;background:transparent;border:0;color:var(--muted);font-size:16px}.plus{color:#5f7389;text-align:center;font-size:22px}.combine-row{display:flex;gap:8px}.combine-row .btn{flex:1}.result{border:1px solid #31565b;border-radius:14px;padding:14px;background:linear-gradient(120deg,rgba(28,66,69,.42),rgba(16,27,38,.55));min-height:110px}.result-head{display:flex;align-items:center;gap:11px}.result-symbol{width:44px;height:44px;border-radius:12px;background:#203a42;border:1px solid #3a7475;display:grid;place-items:center;font-size:24px;flex:none}.result h3{margin:0;font-size:15px}.result .result-type{color:var(--cyan);font-size:10px;text-transform:uppercase;letter-spacing:.13em}.result p{margin:9px 0 0;color:#bdcbd9;font-size:12px}.result.empty{border-color:var(--line);background:#0e151e;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px}.statusline{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:10px}.right-panel{display:flex;flex-direction:column}.tabs{display:flex;border-bottom:1px solid var(--line)}.tab{flex:1;background:transparent;border:0;color:var(--muted);padding:13px 8px;font-size:11px;font-weight:750;letter-spacing:.08em}.tab.active{color:var(--cyan);box-shadow:inset 0 -2px var(--cyan)}.tab-content{padding:13px;min-height:0;flex:1}.inventory-list{display:grid;gap:7px;max-height:420px;overflow:auto;padding-right:2px}.inv-item{display:flex;align-items:center;gap:9px;padding:9px;border:1px solid var(--line);border-radius:11px;background:#111a24;text-align:left;color:var(--text);width:100%}.inv-item:hover{border-color:#4b7082}.inv-item .item-symbol{width:34px;height:34px;font-size:19px;border-radius:9px}.inv-info{flex:1;min-width:0}.inv-info strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.inv-info small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.qty{color:var(--cyan);font-size:12px;font-weight:800}.empty-state{padding:28px 12px;text-align:center;color:var(--muted);font-size:12px}.search{width:100%;background:#0b1119;border:1px solid var(--line);color:var(--text);padding:9px 10px;border-radius:9px;margin-bottom:10px;font:inherit;font-size:12px}.codex-list{display:grid;gap:8px;max-height:460px;overflow:auto}.codex-entry{border:1px solid var(--line);border-radius:10px;padding:10px;background:#111923}.codex-entry strong{font-size:12px}.codex-entry p{font-size:11px;color:var(--muted);margin:5px 0 0}.recipe-line{color:#c3d2e1;font-size:11px;margin-top:5px}.tag{display:inline-block;border:1px solid #33495b;color:#a9bdcf;border-radius:5px;padding:2px 5px;font-size:9px;letter-spacing:.06em;text-transform:uppercase;margin-top:7px}.log-panel{border-top:1px solid var(--line);padding:12px 15px;max-height:120px;overflow:auto}.log-title{font-size:10px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}.log-entry{font-size:11px;color:#b6c5d4;padding:3px 0}.log-entry span{color:var(--cyan)}.footer{display:flex;justify-content:space-between;gap:12px;color:#66798e;font-size:10px;padding:0 3px}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#d5fff5;color:#081816;border-radius:10px;padding:11px 15px;font-weight:750;box-shadow:0 12px 40px #0008;transition:.2s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}.hidden{display:none!important}.level{color:var(--amber);font-size:10px}.count{font-variant-numeric:tabular-nums}
+@media(max-width:1050px){.workspace{grid-template-columns:minmax(200px,.8fr) minmax(330px,1.2fr)}.right-panel{grid-column:1/-1}.inventory-list{grid-template-columns:repeat(2,minmax(0,1fr));max-height:360px}.codex-list{max-height:360px}}
+@media(max-width:650px){.app{padding:12px;gap:12px}.topbar{align-items:flex-start;flex-direction:column}.workspace{grid-template-columns:1fr}.right-panel{grid-column:auto}.source-list{grid-template-columns:repeat(2,minmax(0,1fr))}.source{align-items:flex-start;flex-wrap:wrap}.source .meta{min-width:70px}.source .infinite{margin-left:53px}.slots{grid-template-columns:1fr 20px 1fr}.slot{min-height:125px;padding:7px}.inventory-list{grid-template-columns:1fr}.footer{flex-direction:column}.top-actions{width:100%}}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
-  <div class="brand">
-    <div class="logo">⚗</div>
-    <div>
-      <h1>HAD IT GONE: THE LAB</h1>
-      <p>COMBINE. DISCOVER. EVOLVE.</p>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="stat"><strong id="resourceStat">0</strong><span>Stored units</span></div>
-    <div class="stat"><strong id="discoveryStat">2</strong><span>Discoveries</span></div>
-    <div class="stage" id="stageLabel">STAGE 01 · ORIGINS</div>
-  </div>
-</header>
-
-<main>
-  <section class="panel">
-    <div class="panel-head">
-      <div><div class="eyebrow">01 / Extraction</div><h2>INFINITE SOURCES</h2></div>
-      <span class="pill">∞ SUPPLY</span>
-    </div>
-    <div class="panel-body">
-      <p class="section-label">Available sources</p>
-      <div id="sources"></div>
-      <div class="hint">
-        <b style="color:var(--text)">How it works</b><br>
-        Sources never run out. Extract units whenever you need them. Only crafted materials are consumed in experiments.
-      </div>
-      <div class="hint" id="unlockHint">
-        <b style="color:var(--gold)">Research objective</b><br>
-        Discover Fire to unlock a permanent Heat Source.
-      </div>
-    </div>
-  </section>
-
-  <section class="panel chamber">
-    <div class="panel-head">
-      <div><div class="eyebrow">02 / Experimentation</div><h2>SYNTHESIS CHAMBER</h2></div>
-      <span class="pill" id="experimentCount">0 EXPERIMENTS</span>
-    </div>
-    <div class="chamber-content">
-      <div class="chamber-title">
-        <div class="eyebrow">Select two inventory items</div>
-        <h2>What will you create?</h2>
-        <p>Every combination has a defined, reusable outcome.</p>
-      </div>
-      <div class="slots">
-        <div class="slot" id="slotA"><div class="slot-icon">＋</div><div class="slot-name">Select component</div><div class="slot-sub">First ingredient</div></div>
-        <div class="plus">+</div>
-        <div class="slot" id="slotB"><div class="slot-icon">＋</div><div class="slot-name">Select component</div><div class="slot-sub">Second ingredient</div></div>
-      </div>
-      <div class="result-box">
-        <div class="result-top"><span class="result-title">Predicted outcome</span><span class="result-status" id="reactionStatus">AWAITING INPUT</span></div>
-        <div class="result-name" id="resultName">—</div>
-        <div class="result-description" id="resultDescription">Choose two components from your inventory.</div>
-      </div>
-      <div class="actions">
-        <button class="primary" id="combineBtn" disabled>SYNTHESIZE ↗</button>
-        <button class="secondary" id="clearBtn">CLEAR</button>
-      </div>
-      <div class="feedback" id="feedback">Extract Water and Stone to begin.</div>
-    </div>
-  </section>
-
-  <div class="right-panel">
-    <section class="panel">
-      <div class="panel-head">
-        <div><div class="eyebrow">03 / Resources</div><h2>INVENTORY</h2></div>
-        <span class="count-badge" id="inventoryCount">0 TYPES</span>
-      </div>
-      <div class="panel-body">
-        <div id="inventory" class="inventory-list"></div>
-      </div>
-    </section>
-    <section class="panel">
-      <div class="panel-head">
-        <div><div class="eyebrow">04 / Progress</div><h2>DISCOVERY CODEX</h2></div>
-        <span class="count-badge" id="codexCount">2 KNOWN</span>
-      </div>
-      <div class="panel-body">
-        <div id="codex" class="codex-list"></div>
-      </div>
-    </section>
-  </div>
-</main>
-
-<footer class="log">
-  <div class="log-head"><span class="eyebrow">Research log</span><button class="secondary" id="resetBtn" style="padding:4px 8px;font-size:9px">RESET LAB</button></div>
-  <div class="log-list" id="logList"></div>
-</footer>
-</div>
-
-
+<header class="topbar"><div class="brand"><div class="brandmark">✳</div><div><div class="eyebrow">HAD IT GONE</div><h1>THE LAB</h1><div class="tagline">Combine. Discover. Evolve.</div></div></div><div class="top-actions"><span class="pill">EXPERIMENTAL SYNTHESIS ENGINE</span><span class="pill">DISCOVERIES <b id="discoveryCount" class="count">0</b></span><button class="btn" id="exportBtn">Export save</button><button class="btn danger" id="resetBtn">Reset lab</button></div></header>
+<main class="workspace">
+<section class="panel"><div class="panel-head"><h2>01 / Primordial sources</h2><span class="kicker">Infinite</span></div><div class="panel-body"><div class="source-list" id="sourceList"></div><div class="hint">Primary elements are inexhaustible. Select a source to place it in an empty synthesis slot. Derived materials are stored in your inventory and consumed when used.</div></div></section>
+<section class="panel center-panel"><div class="panel-head"><h2>02 / Synthesis chamber</h2><span class="kicker" id="chamberMode">Awaiting inputs</span></div><div class="chamber"><div class="chamber-top"><div><h3>Pair two components</h3><p>Order does not affect the outcome.</p></div><span class="pill">RULE-BASED</span></div><div class="slots"><button class="slot" id="slot0" aria-label="First input slot"><span class="slot-symbol">＋</span><span class="slot-label">Choose input</span><span class="slot-origin">Source or inventory</span></button><div class="plus">+</div><button class="slot" id="slot1" aria-label="Second input slot"><span class="slot-symbol">＋</span><span class="slot-label">Choose input</span><span class="slot-origin">Source or inventory</span></button></div><div class="combine-row"><button class="btn primary" id="combineBtn">Synthesize components ↗</button><button class="btn" id="clearBtn">Clear</button></div><div id="resultBox" class="result empty">Your synthesis result will appear here.<br>Every pair has a deterministic outcome.</div><div class="statusline"><span id="ruleStatus">No recipe selected</span><span id="lastResult">No discoveries yet</span></div></div><div class="log-panel"><div class="log-title">EXPERIMENT LOG</div><div id="logList"><div class="log-entry">Lab initialized. Four primordial sources available.</div></div></div></section>
+<section class="panel right-panel"><div class="panel-head"><h2>03 / Collection</h2><span class="kicker" id="itemCount">0 materials</span></div><div class="tabs"><button class="tab active" data-tab="inventory">INVENTORY</button><button class="tab" data-tab="codex">CODEX</button></div><div class="tab-content" id="inventoryTab"><input id="inventorySearch" class="search" placeholder="Search discovered materials…" autocomplete="off"><div id="inventoryList" class="inventory-list"></div></div><div class="tab-content hidden" id="codexTab"><input id="codexSearch" class="search" placeholder="Search recipes and discoveries…" autocomplete="off"><div id="codexList" class="codex-list"></div></div></section>
+</main><footer class="footer"><span>LOCAL SAVE · YOUR PROGRESS STAYS IN THIS BROWSER</span><span>Prototype 0.5 · Semantic recipe engine · No external libraries</span></footer>
+</div><div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
-const SAVE_KEY = "hig-lab-v04";
-
-const BASE_ITEMS = {
-  water: {
-    name:"Water", icon:"💧", kind:"Primary material",
-    desc:"An inexhaustible source of liquid.",
-    traits:["liquid","water-derived"]
-  },
-  stone: {
-    name:"Stone", icon:"🪨", kind:"Primary material",
-    desc:"An inexhaustible source of mineral matter.",
-    traits:["mineral","solid"]
-  },
-  heat: {
-    name:"Heat", icon:"♨️", kind:"Energy",
-    desc:"Thermal energy extracted from a permanent vent.",
-    traits:["energy","hot"]
-  },
-  sand: {
-    name:"Sand", icon:"🏖️", kind:"Material",
-    desc:"Loose mineral grains.",
-    traits:["mineral","granular","solid"]
-  },
-  mud: {
-    name:"Mud", icon:"🟤", kind:"Material",
-    desc:"Water mixed with fine mineral particles.",
-    traits:["mineral","liquid","granular"]
-  },
-  gravel: {
-    name:"Gravel", icon:"🪨", kind:"Material",
-    desc:"Coarse fragments of mineral matter.",
-    traits:["mineral","granular","solid"]
-  },
-  flint: {
-    name:"Flint", icon:"🔹", kind:"Material",
-    desc:"A hard mineral capable of producing sparks.",
-    traits:["mineral","solid","spark-capable"]
-  },
-  sparks: {
-    name:"Sparks", icon:"✨", kind:"Energy",
-    desc:"A burst of energy produced by striking flint.",
-    traits:["energy","hot"]
-  },
-  fire: {
-    name:"Fire", icon:"🔥", kind:"Energy",
-    desc:"A source of heat and transformation.",
-    traits:["energy","hot"]
-  },
-  steam: {
-    name:"Steam", icon:"♨️", kind:"Material",
-    desc:"Water transformed by heat.",
-    traits:["gas","hot","water-derived"]
-  },
-  clay: {
-    name:"Clay", icon:"🧱", kind:"Material",
-    desc:"Fine, malleable mineral matter.",
-    traits:["mineral","malleable","solid"]
-  },
-  glass: {
-    name:"Glass", icon:"🔮", kind:"Material",
-    desc:"Mineral matter transformed by heat.",
-    traits:["mineral","solid","transparent"]
-  },
-  mist: {
-    name:"Mist", icon:"🌫️", kind:"Material",
-    desc:"Fine water droplets suspended in air.",
-    traits:["liquid","gas","water-derived"]
-  },
-  heatedStone: {
-    name:"Heated Stone", icon:"🌋", kind:"Material",
-    desc:"Stone carrying thermal energy.",
-    traits:["mineral","solid","hot"]
-  },
-  sediment: {
-    name:"Sediment", icon:"🪹", kind:"Material",
-    desc:"Deposited mineral particles.",
-    traits:["mineral","granular","wet"]
-  },
-  compositeMineral: {
-    name:"Composite Mineral", icon:"💠", kind:"Material",
-    desc:"A structured combination of mineral materials.",
-    traits:["mineral","solid","structured"]
-  },
-  nutrientSolution: {
-    name:"Nutrient Solution", icon:"🧪", kind:"Compound",
-    desc:"A solution suitable for future experiments.",
-    traits:["liquid","nutrient","reactive"]
-  },
-  chargedMineral: {
-    name:"Charged Mineral", icon:"⚡", kind:"Compound",
-    desc:"Mineral matter infused with energy.",
-    traits:["mineral","energy","reactive"]
-  },
-  fertileClay: {
-    name:"Fertile Clay", icon:"🌱", kind:"Compound",
-    desc:"A mineral medium with growth-supporting properties.",
-    traits:["mineral","nutrient","wet"]
-  },
-  hybridMatter: {
-    name:"Hybrid Matter", icon:"🧬", kind:"Compound",
-    desc:"A stable material with combined properties.",
-    traits:["structured","reactive"]
-  }
+(()=>{'use strict';
+const SAVE_KEY='hig-lab-v05';
+const ITEMS={
+ water:{id:'water',name:'Water',icon:'💧',kind:'Primordial element',level:1,phase:'liquid',tags:['aqueous'],moisture:1,heat:0,hardness:0,description:'A foundational liquid element. It dissolves, carries and reshapes other materials.',source:true},
+ earth:{id:'earth',name:'Earth',icon:'🌍',kind:'Primordial element',level:1,phase:'solid',tags:['mineral','granular'],moisture:.15,heat:0,hardness:.45,description:'Raw mineral matter: the basis of soil, stone and countless geological materials.',source:true},
+ fire:{id:'fire',name:'Fire',icon:'🔥',kind:'Primordial element',level:1,phase:'energy',tags:['thermal','reactive'],moisture:0,heat:1,hardness:0,description:'A source of heat and transformation. In this elemental model, it represents intense thermal energy.',source:true},
+ air:{id:'air',name:'Air',icon:'💨',kind:'Primordial element',level:1,phase:'gas',tags:['gaseous','mobile'],moisture:.1,heat:.1,hardness:0,description:'A mobile gaseous element that carries particles, moisture and heat.',source:true},
+ mud:{id:'mud',name:'Mud',icon:'🟤',kind:'Mixture',level:2,phase:'slurry',tags:['aqueous','mineral','granular'],moisture:.85,heat:0,hardness:.1,description:'A water-rich mixture of fine mineral particles.',self:'sediment'},
+ lava:{id:'lava',name:'Lava',icon:'🌋',kind:'Molten rock',level:2,phase:'molten',tags:['mineral','thermal','reactive'],moisture:0,heat:1,hardness:.15,description:'Molten rock formed when mineral matter is intensely heated.',self:'magma'},
+ steam:{id:'steam',name:'Steam',icon:'♨️',kind:'Vapor',level:2,phase:'gas',tags:['aqueous','gaseous','thermal'],moisture:.55,heat:.8,hardness:0,description:'Water vapor produced by intense heating.',self:'cloud'},
+ mist:{id:'mist',name:'Mist',icon:'🌫️',kind:'Aerosol',level:2,phase:'aerosol',tags:['aqueous','gaseous'],moisture:.8,heat:.1,hardness:0,description:'Tiny liquid droplets suspended in air.',self:'cloud'},
+ smoke:{id:'smoke',name:'Smoke',icon:'💨',kind:'Aerosol',level:2,phase:'aerosol',tags:['gaseous','thermal','particulate'],moisture:.05,heat:.35,hardness:0,description:'Airborne particles and gases associated with combustion.',self:'soot'},
+ dust:{id:'dust',name:'Dust',icon:'🌪️',kind:'Particulate matter',level:2,phase:'granular',tags:['mineral','particulate','mobile'],moisture:0,heat:0,hardness:.05,description:'Fine mineral particles carried by moving air.',self:'sand'},
+ tide:{id:'tide',name:'Tidal Surge',icon:'🌊',kind:'Elemental phenomenon',level:2,phase:'liquid',tags:['aqueous','mobile','force'],moisture:1,heat:0,hardness:0,description:'A concentrated surge of water: the elemental expression of water meeting itself.',self:'wave'},
+ stone:{id:'stone',name:'Stone',icon:'🪨',kind:'Rock',level:2,phase:'solid',tags:['mineral','rigid'],moisture:.02,heat:0,hardness:.8,description:'A consolidated mass of mineral matter.',self:'gravel'},
+ inferno:{id:'inferno',name:'Inferno',icon:'🔥',kind:'Intense thermal state',level:2,phase:'energy',tags:['thermal','reactive','force'],moisture:0,heat:1,hardness:0,description:'An intensified, sustained state of fire.',self:'plasma'},
+ wind:{id:'wind',name:'Wind',icon:'🌬️',kind:'Moving air',level:2,phase:'gas',tags:['gaseous','mobile','force'],moisture:.08,heat:.15,hardness:0,description:'Air in motion, capable of transporting heat, moisture and particles.',self:'storm'},
+ clay:{id:'clay',name:'Clay',icon:'🏺',kind:'Fine mineral material',level:3,phase:'plastic-solid',tags:['mineral','aqueous','malleable'],moisture:.35,heat:0,hardness:.25,description:'Fine-grained mineral material that becomes moldable when wet.',self:'ceramic'},
+ brick:{id:'brick',name:'Brick',icon:'🧱',kind:'Fired material',level:3,phase:'solid',tags:['mineral','fired','rigid'],moisture:.03,heat:.1,hardness:.7,description:'A shaped mineral body hardened by firing.',self:'ceramic'},
+ obsidian:{id:'obsidian',name:'Obsidian',icon:'⬛',kind:'Volcanic glass',level:3,phase:'solid',tags:['mineral','glass','volcanic'],moisture:0,heat:.1,hardness:.75,description:'Natural volcanic glass formed when lava cools rapidly.',self:'glass'},
+ glass:{id:'glass',name:'Glass',icon:'🔷',kind:'Amorphous solid',level:3,phase:'solid',tags:['mineral','glass','transparent'],moisture:0,heat:.1,hardness:.5,description:'An amorphous solid formed by cooling a suitable melt.',self:'crystal'},
+ cloud:{id:'cloud',name:'Cloud',icon:'☁️',kind:'Atmospheric phenomenon',level:3,phase:'aerosol',tags:['aqueous','gaseous','weather'],moisture:.75,heat:.05,hardness:0,description:'Suspended water droplets or ice crystals in air.',self:'rain'},
+ rain:{id:'rain',name:'Rain',icon:'🌧️',kind:'Weather phenomenon',level:3,phase:'liquid',tags:['aqueous','weather','mobile'],moisture:1,heat:.05,hardness:0,description:'Water droplets falling from the atmosphere.',self:'flood'},
+ ash:{id:'ash',name:'Ash',icon:'🌑',kind:'Combustion residue',level:3,phase:'powder',tags:['mineral','particulate','thermal-residue'],moisture:0,heat:.1,hardness:.05,description:'Fine solid residue left after combustion.',self:'slag'},
+ sand:{id:'sand',name:'Sand',icon:'🏖️',kind:'Granular material',level:3,phase:'granular',tags:['mineral','granular'],moisture:.02,heat:.05,hardness:.3,description:'Loose grains of mineral or rock material.',self:'sandstone'},
+ sediment:{id:'sediment',name:'Sediment',icon:'🪹',kind:'Deposited particles',level:3,phase:'granular',tags:['mineral','aqueous','granular'],moisture:.4,heat:0,hardness:.15,description:'Particles deposited by water, air or gravity.',self:'sedimentary-rock'},
+ gravel:{id:'gravel',name:'Gravel',icon:'🪨',kind:'Granular rock',level:3,phase:'granular',tags:['mineral','granular','rigid'],moisture:.02,heat:0,hardness:.4,description:'Loose fragments of rock larger than sand grains.',self:'concrete'},
+ soot:{id:'soot',name:'Soot',icon:'⚫',kind:'Carbon-rich residue',level:3,phase:'powder',tags:['particulate','carbon','thermal-residue'],moisture:0,heat:.05,hardness:0,description:'Fine carbon-rich particles produced by incomplete combustion.',self:'carbon'},
+ magma:{id:'magma',name:'Magma',icon:'🌋',kind:'Molten geological material',level:3,phase:'molten',tags:['mineral','thermal','volcanic'],moisture:0,heat:1,hardness:.1,description:'Molten or partially molten rock beneath a planetary surface.',self:'lava-rock'},
+ wave:{id:'wave',name:'Wave',icon:'🌊',kind:'Moving water',level:3,phase:'liquid',tags:['aqueous','mobile','force'],moisture:1,heat:.05,hardness:0,description:'A traveling disturbance through water.',self:'current'},
+ plasma:{id:'plasma',name:'Plasma',icon:'⚡',kind:'Ionized state',level:3,phase:'energy',tags:['thermal','charged','reactive'],moisture:0,heat:1,hardness:0,description:'An energized state of matter containing free charged particles.',self:'arc'},
+ storm:{id:'storm',name:'Storm',icon:'⛈️',kind:'Weather system',level:3,phase:'system',tags:['gaseous','weather','force','aqueous'],moisture:.6,heat:.25,hardness:0,description:'A turbulent atmospheric system involving strong air movement.',self:'cyclone'},
+ ceramic:{id:'ceramic',name:'Ceramic',icon:'🏺',kind:'Fired mineral material',level:4,phase:'solid',tags:['mineral','fired','rigid','heat-resistant'],moisture:0,heat:.2,hardness:.75,description:'A hard material produced by shaping and firing mineral compounds.',self:'refractory'},
+ crystal:{id:'crystal',name:'Crystal',icon:'💎',kind:'Ordered solid',level:4,phase:'solid',tags:['mineral','ordered','rigid'],moisture:0,heat:.05,hardness:.7,description:'A solid with an ordered internal structure.',self:'geode'},
+ sandstone:{id:'sandstone',name:'Sandstone',icon:'🪨',kind:'Sedimentary rock',level:4,phase:'solid',tags:['mineral','sedimentary','rigid'],moisture:.03,heat:0,hardness:.6,description:'Rock formed when sand grains are compacted and cemented.',self:'quartzite'},
+ concrete:{id:'concrete',name:'Concrete',icon:'🏗️',kind:'Composite building material',level:4,phase:'solid',tags:['mineral','composite','rigid'],moisture:.05,heat:0,hardness:.75,description:'A composite material made from aggregate bound by a hardened binder.',self:'reinforced'},
+ carbon:{id:'carbon',name:'Carbon',icon:'⚫',kind:'Chemical element',level:4,phase:'solid',tags:['carbon','reactive','mineral'],moisture:0,heat:0,hardness:.3,description:'A chemical element central to organic chemistry and many industrial materials.',self:'graphite'},
+ flood:{id:'flood',name:'Floodwater',icon:'🌊',kind:'Hydrological event',level:4,phase:'liquid',tags:['aqueous','force','weather'],moisture:1,heat:.05,hardness:0,description:'Water accumulated or flowing beyond its usual boundaries.',self:'erosion'},
+ slag:{id:'slag',name:'Slag',icon:'🪨',kind:'Fused residue',level:4,phase:'solid',tags:['mineral','thermal-residue','fused'],moisture:0,heat:.15,hardness:.5,description:'A glassy or stony by-product of high-temperature processing.',self:'mineralglass'},
+ current:{id:'current',name:'Current',icon:'〰️',kind:'Fluid motion',level:4,phase:'liquid',tags:['aqueous','mobile','force'],moisture:1,heat:.05,hardness:0,description:'Directed movement of a fluid.',self:'maelstrom'},
+ arc:{id:'arc',name:'Electric Arc',icon:'⚡',kind:'Electrical discharge',level:4,phase:'energy',tags:['charged','thermal','reactive'],moisture:0,heat:1,hardness:0,description:'A sustained electrical discharge through an ionized gas.',self:'lightning'},
+ cyclone:{id:'cyclone',name:'Cyclone',icon:'🌀',kind:'Atmospheric system',level:4,phase:'system',tags:['gaseous','weather','force'],moisture:.5,heat:.25,hardness:0,description:'A rotating air mass organized around a low-pressure center.',self:'superstorm'},
+ refractory:{id:'refractory',name:'Refractory Ceramic',icon:'🛡️',kind:'Heat-resistant material',level:5,phase:'solid',tags:['mineral','fired','rigid','heat-resistant'],moisture:0,heat:.25,hardness:.8,description:'Ceramic engineered to retain strength at very high temperatures.',self:'thermal-shield'},
+ geode:{id:'geode',name:'Geode',icon:'💠',kind:'Mineral formation',level:5,phase:'solid',tags:['mineral','ordered','crystal'],moisture:0,heat:.05,hardness:.7,description:'A rock cavity lined with inward-growing crystals.',self:'crystal-cluster'},
+ quartzite:{id:'quartzite',name:'Quartzite',icon:'🪨',kind:'Metamorphic rock',level:5,phase:'solid',tags:['mineral','metamorphic','rigid'],moisture:0,heat:.15,hardness:.85,description:'A hard metamorphic rock formed from quartz-rich sandstone.',self:'silica'},
+ reinforced:{id:'reinforced',name:'Reinforced Concrete',icon:'🏗️',kind:'Engineered composite',level:5,phase:'solid',tags:['mineral','composite','rigid','engineered'],moisture:0,heat:.05,hardness:.9,description:'Concrete strengthened with a reinforcing structure.',self:'advanced-composite'},
+ graphite:{id:'graphite',name:'Graphite',icon:'✏️',kind:'Carbon allotrope',level:5,phase:'solid',tags:['carbon','conductive','mineral'],moisture:0,heat:.05,hardness:.1,description:'A layered form of carbon that conducts electricity.',self:'carbon-fiber'},
+ erosion:{id:'erosion',name:'Erosion',icon:'⛰️',kind:'Geological process',level:5,phase:'process',tags:['mineral','aqueous','force','process'],moisture:.2,heat:0,hardness:0,description:'The removal and transport of rock or soil by water, wind or other agents.',self:'canyon'},
+ mineralglass:{id:'mineralglass',name:'Mineral Glass',icon:'🔷',kind:'Fused mineral material',level:5,phase:'solid',tags:['mineral','glass','fused'],moisture:0,heat:.15,hardness:.65,description:'A glassy material formed by fusing mineral-rich matter.',self:'obsidian'},
+ maelstrom:{id:'maelstrom',name:'Maelstrom',icon:'🌀',kind:'Powerful fluid vortex',level:5,phase:'system',tags:['aqueous','mobile','force'],moisture:1,heat:.05,hardness:0,description:'A powerful rotating current in water.',self:'maelstrom'},
+ lightning:{id:'lightning',name:'Lightning',icon:'⚡',kind:'Electrical phenomenon',level:5,phase:'energy',tags:['charged','thermal','weather'],moisture:.1,heat:1,hardness:0,description:'A powerful electrical discharge in the atmosphere.',self:'plasma'},
+ superstorm:{id:'superstorm',name:'Superstorm',icon:'🌪️',kind:'Severe weather system',level:5,phase:'system',tags:['gaseous','weather','force','aqueous'],moisture:.8,heat:.3,hardness:0,description:'An exceptionally intense atmospheric system.',self:'cyclone'},
+ waveenergy:{id:'waveenergy',name:'Wave Energy',icon:'🌊',kind:'Energy transfer',level:5,phase:'energy',tags:['aqueous','force','energy'],moisture:.5,heat:.1,hardness:0,description:'Energy transferred by a moving wave.',self:'waveenergy'},
+ composite:{id:'composite',name:'Mineral Composite',icon:'🔶',kind:'Composite material',level:4,phase:'solid',tags:['mineral','composite','rigid'],moisture:.02,heat:.1,hardness:.65,description:'A coherent material made from two or more mineral constituents.',self:'reinforced'},
+ aerosol:{id:'aerosol',name:'Mineral Aerosol',icon:'🌫️',kind:'Suspended particles',level:3,phase:'aerosol',tags:['mineral','gaseous','particulate'],moisture:.1,heat:.05,hardness:0,description:'Fine solid or liquid particles suspended in a gas.',self:'dust'},
+ slurry:{id:'slurry',name:'Mineral Slurry',icon:'🫗',kind:'Suspension',level:3,phase:'slurry',tags:['mineral','aqueous','particulate'],moisture:.8,heat:.05,hardness:0,description:'Mineral particles suspended in liquid.',self:'sediment'},
+ vapor:{id:'vapor',name:'Heated Vapor',icon:'♨️',kind:'Gas mixture',level:3,phase:'gas',tags:['gaseous','thermal','aqueous'],moisture:.45,heat:.7,hardness:0,description:'A heated gaseous mixture produced by thermal interaction.',self:'steam'},
+ fused:{id:'fused',name:'Fused Mineral',icon:'🔶',kind:'Fused material',level:4,phase:'solid',tags:['mineral','fused','thermal'],moisture:0,heat:.25,hardness:.6,description:'Mineral matter altered or joined by high temperature.',self:'mineralglass'},
+ compacted:{id:'compacted',name:'Compacted Aggregate',icon:'🪨',kind:'Granular composite',level:4,phase:'solid',tags:['mineral','granular','composite'],moisture:.03,heat:0,hardness:.55,description:'A compacted mass of mineral grains and fragments.',self:'concrete'},
+ thermalresidue:{id:'thermalresidue',name:'Thermal Residue',icon:'🌑',kind:'Reaction residue',level:4,phase:'solid',tags:['mineral','thermal-residue'],moisture:0,heat:.15,hardness:.3,description:'A solid residue left after a high-temperature transformation.',self:'slag'},
+ atmosphere:{id:'atmosphere',name:'Turbulent Atmosphere',icon:'🌪️',kind:'Gas system',level:4,phase:'system',tags:['gaseous','force','weather'],moisture:.25,heat:.2,hardness:0,description:'A turbulent mixture of gases and suspended particles.',self:'cyclone'},
+ 'sedimentary-rock':{id:'sedimentary-rock',name:'Sedimentary Rock',icon:'🪨',kind:'Sedimentary rock',level:4,phase:'solid',tags:['mineral','sedimentary','rigid'],moisture:0,heat:0,hardness:.65,description:'Rock formed from accumulated sediment that becomes compacted and cemented.',self:'sandstone'},
+ 'lava-rock':{id:'lava-rock',name:'Cooled Lava Rock',icon:'🌋',kind:'Igneous rock',level:4,phase:'solid',tags:['mineral','volcanic','rigid'],moisture:0,heat:.1,hardness:.7,description:'Solid rock formed when lava cools and crystallizes.',self:'obsidian'},
+ 'thermal-shield':{id:'thermal-shield',name:'Thermal Shield',icon:'🛡️',kind:'Engineered heat barrier',level:5,phase:'solid',tags:['mineral','fired','rigid','heat-resistant','engineered'],moisture:0,heat:.15,hardness:.8,description:'A layered material designed to resist intense heat transfer.',self:'thermal-shield'},
+ 'crystal-cluster':{id:'crystal-cluster',name:'Crystal Cluster',icon:'💠',kind:'Mineral formation',level:5,phase:'solid',tags:['mineral','ordered','crystal'],moisture:0,heat:.05,hardness:.75,description:'Multiple crystals grown together into a single mineral formation.',self:'geode'},
+ silica:{id:'silica',name:'Silica',icon:'🔹',kind:'Mineral compound',level:5,phase:'solid',tags:['mineral','silicate','rigid'],moisture:0,heat:.1,hardness:.7,description:'Silicon dioxide, a major constituent of sand, quartz and many rocks.',self:'crystal'},
+ 'advanced-composite':{id:'advanced-composite',name:'Advanced Composite',icon:'🔶',kind:'Engineered composite',level:5,phase:'solid',tags:['mineral','composite','rigid','engineered'],moisture:0,heat:.15,hardness:.85,description:'A designed composite combining constituents to achieve improved performance.',self:'advanced-composite'},
+ 'carbon-fiber':{id:'carbon-fiber',name:'Carbon Fiber',icon:'🧵',kind:'Engineered carbon material',level:5,phase:'solid',tags:['carbon','engineered','rigid'],moisture:0,heat:.05,hardness:.65,description:'A high-strength material made from thin fibers primarily composed of carbon.',self:'advanced-composite'},
+ canyon:{id:'canyon',name:'Canyon',icon:'🏜️',kind:'Landform',level:5,phase:'landform',tags:['mineral','aqueous','force','geological'],moisture:.05,heat:0,hardness:.5,description:'A deep valley carved by long-term erosion, often by flowing water.',self:'erosion'}
 };
-
-const SOURCES = [
-  {id:"water",name:"Water Source",icon:"💧",desc:"Extract a unit of water."},
-  {id:"stone",name:"Stone Source",icon:"🪨",desc:"Extract a unit of stone."},
-  {id:"heat",name:"Thermal Vent",icon:"♨️",desc:"Extract a unit of heat.",unlock:"fire"}
-];
-
-const RECIPES = {};
-function put(a,b,out,why) {
-  RECIPES[keyOf(a,b)] = {out,why};
+const RECIPES={};
+function recipe(a,b,out,why){const k=pairKey(a,b);RECIPES[k]={out,why};}
+// Carefully authored recipes: grounded in material science where possible; elemental combinations are explicitly game rules.
+recipe('water','earth','mud','Water suspends fine mineral particles.');recipe('earth','fire','lava','In the elemental model, intense heat melts mineral matter.');recipe('fire','water','steam','Heat turns water into vapor.');recipe('air','water','mist','Tiny water droplets become suspended in air.');recipe('air','fire','smoke','The elemental model turns fire meeting air into a smoky plume.');recipe('air','earth','dust','Air disperses fine mineral particles.');recipe('water','water','tide','Water combines into a concentrated surge.');recipe('earth','earth','stone','Mineral matter consolidates into rock.');recipe('fire','fire','inferno','The thermal element intensifies.');recipe('air','air','wind','Air in motion becomes wind.');
+recipe('mud','fire','brick','Firing a shaped mineral mixture creates brick-like material.');recipe('mud','earth','clay','More mineral matter thickens the mixture into clay-rich material.');recipe('mud','water','slurry','Additional water creates a mineral slurry.');recipe('mud','air','sediment','Airflow dries and redistributes the mineral particles.');recipe('lava','water','obsidian','Rapid cooling of suitable lava can form volcanic glass.');recipe('lava','air','ash','Cooling and fragmentation of volcanic material produces ash-like particles.');recipe('lava','earth','magma','The mixture becomes a broader molten geological mass.');recipe('lava','fire','magma','Additional heat sustains molten rock.');recipe('steam','air','cloud','Water vapor mixes with air; cooling and condensation form cloud droplets.');recipe('steam','earth','sediment','Condensation carries particles that can settle as sediment.');recipe('steam','fire','vapor','Additional heat sustains heated vapor.');recipe('steam','water','cloud','Vapor and liquid water form a cloud-like condensate in this model.');recipe('mist','air','cloud','Droplets dispersed through more air form a cloud-like suspension.');recipe('mist','water','rain','Coalescing droplets form precipitation in the game model.');recipe('mist','earth','sediment','Droplets capture and deposit fine mineral particles.');recipe('smoke','air','aerosol','Smoke disperses into a broader airborne particle mixture.');recipe('smoke','water','slurry','Particles are captured by water and form a suspension.');recipe('smoke','earth','ash','Combustion particles mix with mineral residue.');recipe('smoke','fire','inferno','More thermal energy intensifies the combustion state.');recipe('dust','water','slurry','Fine mineral dust becomes suspended in water.');recipe('dust','earth','sand','Fine particles mix with coarser mineral grains.');recipe('dust','fire','ash','Heating mineral particles produces a thermal residue in this model.');recipe('dust','air','aerosol','Airborne particles form a mineral aerosol.');recipe('stone','fire','fused','Intense heat alters or fuses suitable mineral material.');recipe('stone','water','sediment','Water weathering releases particles from rock.');recipe('stone','air','sand','Wind abrasion breaks down rock into smaller grains.');recipe('stone','earth','gravel','Rock fragments accumulate as gravel.');recipe('stone','stone','gravel','Repeated fracture creates a mass of rock fragments.');recipe('inferno','water','steam','Water exposed to extreme heat vaporizes.');recipe('inferno','air','plasma','Extreme energy can ionize gas in the game model.');recipe('inferno','earth','lava','Extreme heat melts mineral matter.');recipe('inferno','stone','fused','High heat transforms mineral matter.');recipe('wind','water','wave','Moving air transfers energy to the water surface.');recipe('wind','earth','dust','Wind carries fine mineral particles.');recipe('wind','stone','sand','Wind erosion produces smaller mineral grains.');recipe('wind','fire','inferno','Strong airflow intensifies the fire state in this elemental model.');recipe('tide','earth','sediment','Moving water transports and deposits mineral particles.');recipe('tide','fire','steam','Heat applied to moving water produces vapor.');recipe('tide','air','wave','Moving air and water create wave motion.');recipe('tide','stone','erosion','Powerful water movement wears down rock.');
+recipe('clay','fire','brick','Firing clay creates brick or ceramic material.');recipe('clay','water','slurry','Excess water turns clay into a slurry.');recipe('clay','air','ceramic','Drying and firing transform clay into ceramic material in this model.');recipe('clay','stone','composite','Clay and stone combine into a mineral composite.');recipe('brick','fire','ceramic','Further firing produces a ceramic material.');recipe('brick','water','sediment','Weathering breaks fired material into mineral particles.');recipe('brick','wind','sandstone','Erosion releases grains that can contribute to sedimentary rock.');recipe('obsidian','fire','fused','Heating volcanic glass produces a fused mineral mass.');recipe('obsidian','water','mineralglass','Obsidian and water yield a mineral-glass specimen in the lab model.');recipe('obsidian','stone','composite','Volcanic glass and rock form a mineral composite.');recipe('glass','fire','fused','Glass reheated beyond its softening point becomes a fused mass.');recipe('glass','earth','composite','Glass and mineral matter form a composite.');recipe('glass','water','obsidian','Rapid cooling is a game abstraction here, not a universal glass-to-obsidian process.');recipe('cloud','air','storm','Clouds and moving air develop into a weather system in this model.');recipe('cloud','water','rain','Cloud droplets grow and fall as precipitation.');recipe('cloud','fire','storm','Thermal energy drives atmospheric turbulence in the game model.');recipe('rain','earth','sediment','Rain transports and deposits mineral particles.');recipe('rain','stone','erosion','Water flowing over rock drives erosion.');recipe('rain','fire','steam','Water heated by fire becomes vapor.');recipe('ash','water','slurry','Ash mixed with water forms a suspension.');recipe('ash','earth','composite','Ash and mineral matter combine into a composite.');recipe('ash','fire','slag','Heating ash-rich mineral material can form fused residue in this model.');recipe('sand','fire','glass','Suitable silica-rich sand can be melted and cooled into glass.');recipe('sand','water','sediment','Water transports sand grains as sediment.');recipe('sand','earth','sandstone','Compaction and cementation of sand can form sandstone.');recipe('sand','air','aerosol','Air carries fine sand and dust as an aerosol.');recipe('sediment','water','slurry','Water suspends deposited mineral particles.');recipe('sediment','earth','sandstone','Compaction and cementation form sedimentary rock.');recipe('sediment','fire','fused','Heating suitable sediment can fuse mineral grains.');recipe('gravel','water','concrete','Gravel can serve as aggregate in a concrete-like composite.');recipe('gravel','earth','compacted','Mineral grains compact into an aggregate.');recipe('gravel','fire','fused','High heat fuses suitable mineral fragments.');recipe('soot','air','aerosol','Soot particles disperse through air.');recipe('soot','fire','carbon','Carbon-rich residue is concentrated in this model.');recipe('magma','water','obsidian','Rapid cooling of suitable lava can produce volcanic glass.');recipe('magma','air','ash','Volcanic material fragments into ash-like particles.');recipe('magma','earth','fused','Molten and solid minerals fuse into a geological mass.');recipe('wave','earth','erosion','Wave action erodes mineral surfaces.');recipe('wave','air','wind','Air movement transfers energy to a moving water surface.');recipe('wave','water','current','Wave motion develops into directed fluid movement.');recipe('plasma','air','arc','An energized gas can sustain an electrical discharge.');recipe('plasma','water','steam','Extreme energy vaporizes water in the game model.');recipe('plasma','earth','fused','High energy transforms mineral matter.');recipe('wind','cloud','storm','Moving air organizes cloud into a storm system.');recipe('wind','rain','erosion','Wind and rain jointly accelerate erosion.');recipe('storm','water','flood','Severe weather and abundant water can produce flooding.');recipe('storm','earth','erosion','Storms strip and transport soil and rock.');recipe('storm','fire','lightning','Strong storms can produce lightning.');recipe('storm','wind','cyclone','Rotating storm circulation becomes a cyclone in this model.');recipe('ceramic','fire','refractory','Further engineering yields a heat-resistant ceramic.');recipe('ceramic','stone','composite','Ceramic and rock form an engineered mineral composite.');recipe('crystal','earth','geode','Crystals form within a mineral cavity in this model.');recipe('crystal','water','mineralglass','Minerals and fluid create a mineral specimen.');recipe('sandstone','fire','quartzite','Heat and pressure are abstracted as metamorphic transformation in this game.');recipe('sandstone','water','sediment','Weathering returns sandstone to sediment.');recipe('concrete','stone','reinforced','The composite is strengthened into an engineered building material.');recipe('carbon','fire','graphite','Carbon transforms into a carbon-rich solid in this model.');recipe('flood','earth','erosion','Floodwater removes and transports soil.');recipe('slag','water','mineralglass','Rapid cooling forms a glassy mineral residue.');recipe('current','air','waveenergy','Fluid motion transfers energy into wave motion.');recipe('arc','air','lightning','An electrical discharge through air manifests as lightning.');recipe('cyclone','water','superstorm','Moisture and rotation intensify the storm system.');
+function pairKey(a,b){return [a,b].sort().join('|')}
+function getItem(id){return ITEMS[id]||state.generatedItems[id]}
+function allItems(){return [...Object.values(ITEMS),...Object.values(state.generatedItems)]}
+function stableHash(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
+function choose(arr,key){return arr[parseInt(stableHash(key),36)%arr.length]}
+function has(it,tag){return !!it&&it.tags.includes(tag)}
+function isHot(it){return !!it&&(it.heat>=.65||has(it,'thermal'))}
+function isWet(it){return !!it&&(it.moisture>=.55||has(it,'aqueous'))}
+function isMineral(it){return !!it&&(has(it,'mineral')||has(it,'granular')||has(it,'rigid'))}
+function isGas(it){return !!it&&(['gas','aerosol','system'].includes(it.phase)||has(it,'gaseous'))}
+function semanticFallback(aId,bId){
+ const a=getItem(aId),b=getItem(bId),key=pairKey(aId,bId);if(!a||!b)return {family:'composite',why:'The unknown pairing resolves to a stable composite material.',generated:true};
+ if(aId===bId&&a.self&&getItem(a.self))return {out:a.self,why:`Two units of ${a.name.toLowerCase()} consolidate or intensify into ${getItem(a.self).name.toLowerCase()}.`};
+ const hot=isHot(a)||isHot(b),wet=isWet(a)||isWet(b),minA=isMineral(a),minB=isMineral(b),gasA=isGas(a),gasB=isGas(b),gas=gasA||gasB,min=minA||minB;
+ if(hot&&wet){if(min)return {family:'fused-mineral',why:'Heat transforms the mineral-rich mixture into a fused material.',generated:true};return {family:'thermal-mixture',why:'Thermal energy drives moisture into a heated vapor mixture.',generated:true}}
+ if(wet&&min)return {family:'mineral-suspension',why:'Water and mineral particles form a suspension or deposited sediment.',generated:true};
+ if(hot&&min)return {family:((a.hardness||0)+(b.hardness||0)>.9)?'fused-mineral':'thermal-residue',why:'Thermal energy alters the mineral material, producing fused matter or residue.',generated:true};
+ if(gas&&min)return {family:(has(a,'particulate')||has(b,'particulate'))?'aerosol':'airborne-mineral',why:'Airflow disperses mineral matter into fine airborne particles.',generated:true};
+ if(gas&&wet)return {family:(hot?'thermal-mixture':'condensate'),why:'Moisture and gas form a suspended droplet or vapor system.',generated:true};
+ if(gas&&hot)return {family:(has(a,'charged')||has(b,'charged'))?'thermal-plume':'atmosphere',why:'A gaseous component interacts with high energy, creating an energized gas system.',generated:true};
+ if(minA&&minB)return {family:(has(a,'granular')||has(b,'granular'))?'compacted-aggregate':'composite',why:'The mineral components form an aggregate or composite material.',generated:true};
+ if(hot)return {family:'thermal-residue',why:'The interaction leaves a stable thermal reaction residue.',generated:true};
+ if(gas)return {family:'atmosphere',why:'The gaseous components form a turbulent atmospheric mixture.',generated:true};
+ if(wet)return {family:'fluid-mixture',why:'The fluid components combine into a directed fluid state.',generated:true};
+ return {family:'composite',why:'The components form a stable composite material under the lab’s material rules.',generated:true};
 }
-
-function keyOf(a,b) {
-  return [a,b].sort().join("|");
-}
-
-put("stone","water","sand",
-  "Water and stone produce loose mineral grains in this experimental world.");
-put("stone","stone","flint",
-  "The mineral surfaces form a flint-like material.");
-put("flint","stone","sparks",
-  "Striking flint against stone produces sparks.");
-put("sand","sparks","fire",
-  "Sparks trigger a thermal reaction.");
-put("fire","water","steam",
-  "Heat transforms water into steam.");
-put("sand","water","mud",
-  "Water binds loose mineral grains into mud.");
-put("sand","stone","gravel",
-  "The materials form a coarse mineral aggregate.");
-put("mud","stone","clay",
-  "Processing the mixture produces fine mineral matter.");
-put("fire","sand","glass",
-  "Heat transforms sand into glass-like material.");
-put("water","water","mist",
-  "The water source produces a fine water mist.");
-put("fire","stone","heatedStone",
-  "Fire transfers thermal energy into stone.");
-put("heat","stone","heatedStone",
-  "Thermal energy heats the mineral.");
-put("heat","water","steam",
-  "Thermal energy transforms water into steam.");
-put("heat","sand","glass",
-  "Heat transforms sand into glass-like material.");
-put("heat","mud","clay",
-  "Heat transforms the wet mineral mixture.");
-put("clay","water","fertileClay",
-  "The mixture becomes a water-rich growth medium.");
-put("mud","water","sediment",
-  "The mixture settles into mineral sediment.");
-put("clay","sand","compositeMineral",
-  "The materials form a composite mineral structure.");
-put("glass","stone","compositeMineral",
-  "The materials form a structured mineral composite.");
-put("fire","mud","clay",
-  "Heat transforms the mineral mixture.");
-put("fire","glass","compositeMineral",
-  "Further heating changes the material structure.");
-put("fire","flint","heatedStone",
-  "Thermal energy changes the mineral.");
-put("mist","stone","sediment",
-  "Moisture and mineral particles settle together.");
-put("mist","sand","mud",
-  "Water droplets bind sand grains.");
-put("gravel","water","sediment",
-  "Water separates and deposits mineral particles.");
-put("flint","water","sediment",
-  "The mineral surface breaks down into a wet deposit.");
-
-const PREFIXES = [
-  "Aether","Luma","Vitra","Mora","Cryo","Nexa","Velo","Thal",
-  "Zyra","Orbi","Myco","Auri","Pyra","Vel","Ossa","Nimbi",
-  "Kera","Ech","Sol","Umbra","Tera","Cera","Flora","Prisma"
-];
-
-const SUFFIXES = [
-  "lith","glass","core","moss","flux","crystal","matter",
-  "shard","weave","essence","stone","form","ite","gel",
-  "matrix","spark","veil","grain","bloom","alloy","drift",
-  "nexus","silica","root"
-];
-
-function hash32(text, seed=2166136261) {
-  let h = seed >>> 0;
-  for (let i=0;i<text.length;i++) {
-    h ^= text.charCodeAt(i);
-    h = Math.imul(h,16777619);
-  }
-  return h >>> 0;
-}
-
-function hashPair(text) {
-  return [
-    hash32(text,2166136261).toString(36),
-    hash32(text,3339675911).toString(36)
-  ].join("_");
-}
-
-function shortCode(text) {
-  return hash32(text,2654435761).toString(36).toUpperCase().padStart(5,"0").slice(-5);
-}
-
-function generatedName(id) {
-  const h1 = hash32(id,2166136261);
-  const h2 = hash32(id,3339675911);
-  return PREFIXES[h1 % PREFIXES.length]
-    + SUFFIXES[h2 % SUFFIXES.length]
-    + "-" + shortCode(id);
-}
-
-function generatedIcon(id) {
-  const h1 = hash32(id,2166136261);
-  const h2 = hash32(id,3339675911);
-  const hue1 = h1 % 360;
-  const hue2 = (hue1 + 55 + h2 % 100) % 360;
-  const shape = h2 % 3;
-  const core = shape === 0
-    ? '<polygon points="32,10 49,21 46,43 30,54 15,40 16,22"/>'
-    : shape === 1
-    ? '<path d="M32 9 C43 17 53 27 46 40 C41 51 24 53 16 40 C8 27 22 17 32 9 Z"/>'
-    : '<path d="M32 8 L49 19 L51 39 L32 54 L13 39 L15 19 Z"/>';
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="36" height="36" aria-label="Generated material icon">
-    <defs>
-      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="hsl(${hue1},75%,75%)"/>
-        <stop offset="100%" stop-color="hsl(${hue2},70%,38%)"/>
-      </linearGradient>
-      <radialGradient id="glow">
-        <stop offset="0%" stop-color="hsl(${hue1},90%,80%)" stop-opacity=".75"/>
-        <stop offset="100%" stop-color="hsl(${hue2},80%,30%)" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
-    <circle cx="32" cy="32" r="30" fill="url(#glow)"/>
-    ${core.replace("/>",' fill="url(#g)" stroke="hsl('+hue1+',85%,85%)" stroke-width="1.5"/>')}
-    <path d="M24 18 L31 27 L25 36 L33 44" fill="none" stroke="#ffffff" stroke-opacity=".65" stroke-width="2" stroke-linecap="round"/>
-    <circle cx="${20 + h1%25}" cy="${17 + h2%25}" r="2" fill="#fff" fill-opacity=".85"/>
-    <circle cx="${35 + h2%12}" cy="${35 + h1%12}" r="1.6" fill="#fff" fill-opacity=".65"/>
-  </svg>`;
-}
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-
-function freshState() {
-  return {
-    inventory:{},
-    discovered:["water","stone"],
-    experiments:0,
-    unlocked:["water","stone"],
-    log:["Lab initialized. Water and Stone sources are online."],
-    generatedItems:{},
-    generatedRecipes:{}
-  };
-}
-
-function loadState() {
-  let saved;
-  try {
-    saved = JSON.parse(localStorage.getItem(SAVE_KEY));
-  } catch {}
-  if (!saved || typeof saved !== "object") {
-    // Migrate the previous prototype's save if available.
-    try {
-      saved = JSON.parse(localStorage.getItem("hig-lab-v03"));
-    } catch {}
-  }
-  if (!saved || typeof saved !== "object") return freshState();
-
-  const state = {
-    inventory: saved.inventory || {},
-    discovered: Array.isArray(saved.discovered) ? saved.discovered : ["water","stone"],
-    experiments: Number(saved.experiments) || 0,
-    unlocked: Array.isArray(saved.unlocked) ? saved.unlocked : ["water","stone"],
-    log: Array.isArray(saved.log) ? saved.log : [],
-    generatedItems: saved.generatedItems || {},
-    generatedRecipes: saved.generatedRecipes || {}
-  };
-
-  // Keep any components from the previous prototype visible.
-  const oldIds = new Set([
-    ...Object.keys(state.inventory),
-    ...state.discovered
-  ]);
-
-  for (const id of oldIds) {
-    if (BASE_ITEMS[id] || state.generatedItems[id]) continue;
-    const h = hashPair(id);
-    state.generatedItems[id] = {
-      name:"Archived Material " + shortCode(id),
-      kind:"Archived material",
-      desc:"A component carried over from an earlier Lab version.",
-      traits:["generated","structured"],
-      legacy:true
-    };
-  }
-
-  if (!state.unlocked.includes("water")) state.unlocked.push("water");
-  if (!state.unlocked.includes("stone")) state.unlocked.push("stone");
-  if (!state.discovered.includes("water")) state.discovered.push("water");
-  if (!state.discovered.includes("stone")) state.discovered.push("stone");
-
-  return state;
-}
-
-let state = loadState();
-let selected = [];
-
-function save() {
-  try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-  } catch (error) {
-    console.warn("Could not save Lab state.",error);
-  }
-}
-
-function item(id) {
-  return BASE_ITEMS[id] || state.generatedItems[id] || {
-    name:"Unknown Material",
-    icon:"🧬",
-    kind:"Material",
-    desc:"An unidentified component.",
-    traits:["structured"]
-  };
-}
-
-function iconMarkup(id) {
-  if (state.generatedItems[id]) return generatedIcon(id);
-  return escapeHtml(item(id).icon || "🧪");
-}
-
-function count(id) {
-  return Number(state.inventory[id]) || 0;
-}
-
-function add(id,amount=1) {
-  state.inventory[id] = count(id) + amount;
-}
-
-function consume(id,amount=1) {
-  const remaining = count(id) - amount;
-  if (remaining <= 0) delete state.inventory[id];
-  else state.inventory[id] = remaining;
-}
-
-function note(message) {
-  state.log.unshift(message);
-  state.log = state.log.slice(0,12);
-}
-
-function unlockSources() {
-  if (state.discovered.includes("fire") && !state.unlocked.includes("heat")) {
-    state.unlocked.push("heat");
-    note("NEW SOURCE UNLOCKED: Thermal Vent.");
-  }
-}
-
-function makeGeneratedItem(a,b,key) {
-  const parents = [a,b].sort();
-  const id = "g_" + hashPair(key);
-  const first = item(parents[0]);
-  const second = item(parents[1]);
-
-  const traits = [...new Set([
-    ...(first.traits || []),
-    ...(second.traits || []),
-    "generated",
-    "structured"
-  ])];
-
-  const generated = {
-    name:generatedName(key),
-    kind:"Generated material",
-    desc:"A stable material formed from "
-      + first.name + " and " + second.name
-      + ". Its properties inherit traits from both components.",
-    traits,
-    parents,
-    recipeKey:key
-  };
-
-  // Extremely unlikely hash collision: resolve it deterministically.
-  let finalId = id;
-  let salt = 0;
-  while (
-    (BASE_ITEMS[finalId] ||
-     (state.generatedItems[finalId] &&
-      state.generatedItems[finalId].recipeKey !== key))
-  ) {
-    salt++;
-    finalId = "g_" + hashPair(key + "#" + salt);
-  }
-
-  if (!state.generatedItems[finalId]) {
-    state.generatedItems[finalId] = generated;
-  }
-
-  return finalId;
-}
-
-function recipeFor(a,b) {
-  const key = keyOf(a,b);
-
-  // Hand-crafted reactions take priority.
-  if (RECIPES[key]) return RECIPES[key];
-
-  // Reuse the exact same recipe after every reload.
-  if (state.generatedRecipes[key]) {
-    return state.generatedRecipes[key];
-  }
-
-  // Every other pair, including an item combined with itself,
-  // receives one deterministic result.
-  const out = makeGeneratedItem(a,b,key);
-  const reaction = {
-    out,
-    why:"A new material forms from the combined properties of "
-      + item(a).name + " and " + item(b).name + "."
-  };
-
-  state.generatedRecipes[key] = reaction;
-  save();
-  return reaction;
-}
-
-function extract(id) {
-  if (!state.unlocked.includes(id)) return;
-
-  add(id);
-  if (!state.discovered.includes(id)) state.discovered.push(id);
-
-  note("Extracted 1 unit of " + item(id).name + ".");
-  render();
-  selectFeedback("Extracted " + item(id).name + ". The source remains infinite.");
-}
-
-function selectItem(id) {
-  if (count(id) < 1) return;
-
-  if (selected.length === 0) {
-    selected = [id];
-  } else if (selected.length === 1) {
-    if (selected[0] === id && count(id) < 2) {
-      selectFeedback("You need two units to combine a component with itself.");
-      return;
-    }
-    selected.push(id);
-  } else {
-    selected = [id];
-  }
-
-  render();
-}
-
-function combine() {
-  if (selected.length !== 2) return;
-
-  const [a,b] = selected;
-  if (count(a) < 1 || count(b) < (a === b ? 2 : 1)) {
-    selectFeedback("Not enough material. Extract more from a source.");
-    selected = [];
-    render();
-    return;
-  }
-
-  // Determine and validate the outcome BEFORE consuming ingredients.
-  let reaction;
-  try {
-    reaction = recipeFor(a,b);
-    if (!reaction || !reaction.out || !item(reaction.out)) {
-      throw new Error("Reaction has no valid output.");
-    }
-  } catch (error) {
-    console.error(error);
-    selectFeedback("Reaction failed. Your ingredients have been preserved.");
-    return;
-  }
-
-  consume(a);
-  consume(b);
-  add(reaction.out);
-  state.experiments++;
-
-  if (!state.discovered.includes(reaction.out)) {
-    state.discovered.push(reaction.out);
-    note("NEW DISCOVERY: " + item(reaction.out).name + ".");
-  } else {
-    note("Synthesized " + item(reaction.out).name + ".");
-  }
-
-  unlockSources();
-  selected = [];
-  save();
-  render();
-  selectFeedback("Reaction complete: " + item(reaction.out).name + " added to inventory.");
-}
-
-function selectFeedback(message) {
-  document.getElementById("feedback").textContent = message;
-}
-
-function renderSources() {
-  const root = document.getElementById("sources");
-  root.innerHTML = "";
-
-  SOURCES.filter(s => state.unlocked.includes(s.id)).forEach(s => {
-    const b = document.createElement("button");
-    b.className = "source-card";
-    b.innerHTML = `<span class="source-icon">${s.icon}</span>
-      <span><span class="source-name">${escapeHtml(s.name)}</span>
-      <span class="source-desc">${escapeHtml(s.desc)}</span>
-      <span class="collect">＋ EXTRACT UNIT</span></span>`;
-    b.onclick = () => extract(s.id);
-    root.appendChild(b);
-  });
-
-  document.getElementById("unlockHint").innerHTML =
-    state.unlocked.includes("heat")
-      ? "<b style='color:var(--accent)'>New source online</b><br>The Thermal Vent is now permanently available."
-      : "<b style='color:var(--gold)'>Research objective</b><br>Discover Fire to unlock a permanent Heat Source.";
-}
-
-function renderInventory() {
-  const root = document.getElementById("inventory");
-  root.innerHTML = "";
-
-  const ids = Object.keys(state.inventory)
-    .filter(id => count(id) > 0)
-    .sort((a,b) => item(a).name.localeCompare(item(b).name));
-
-  document.getElementById("inventoryCount").textContent = ids.length + " TYPES";
-
-  if (!ids.length) {
-    root.innerHTML = '<div class="empty">Your inventory is empty.<br>Extract Water and Stone to begin.</div>';
-  }
-
-  ids.forEach(id => {
-    const b = document.createElement("button");
-    b.className = "inv-item" + (selected.includes(id) ? " selected" : "");
-    b.innerHTML = `<span class="inv-icon">${iconMarkup(id)}</span>
-      <span><span class="inv-name">${escapeHtml(item(id).name)}</span>
-      <span class="inv-type">${escapeHtml(item(id).kind)}</span></span>
-      <span class="inv-count">×${count(id)}</span>`;
-    b.onclick = () => selectItem(id);
-    root.appendChild(b);
-  });
-}
-
-function renderSlot(slotId,id,number) {
-  const root = document.getElementById(slotId);
-
-  if (!id) {
-    root.className = "slot";
-    root.innerHTML = `<div class="slot-icon">＋</div>
-      <div class="slot-name">Select component</div>
-      <div class="slot-sub">Ingredient ${number}</div>`;
-    return;
-  }
-
-  root.className = "slot filled";
-  root.innerHTML = `<div class="slot-icon">${iconMarkup(id)}</div>
-    <div class="slot-name">${escapeHtml(item(id).name)}</div>
-    <div class="slot-sub">×${selected.filter(x=>x===id).length} selected</div>`;
-}
-
-function renderReaction() {
-  const ready = selected.length === 2;
-  renderSlot("slotA",selected[0],1);
-  renderSlot("slotB",selected[1],2);
-
-  const name = document.getElementById("resultName");
-  const desc = document.getElementById("resultDescription");
-  const status = document.getElementById("reactionStatus");
-  const button = document.getElementById("combineBtn");
-
-  if (!ready) {
-    name.textContent = "—";
-    desc.textContent = selected.length === 1
-      ? "Choose a second component from your inventory."
-      : "Choose two components from your inventory.";
-    status.textContent = selected.length ? "ONE MORE" : "AWAITING INPUT";
-    button.disabled = true;
-    return;
-  }
-
-  const reaction = recipeFor(selected[0],selected[1]);
-  name.textContent = item(reaction.out).name;
-  desc.textContent = reaction.why;
-  status.textContent = state.discovered.includes(reaction.out)
-    ? "KNOWN REACTION" : "NEW DISCOVERY";
-  button.disabled = false;
-}
-
-function renderCodex() {
-  const root = document.getElementById("codex");
-  root.innerHTML = "";
-
-  const ids = [...new Set(state.discovered)]
-    .sort((a,b) => item(a).name.localeCompare(item(b).name));
-
-  document.getElementById("codexCount").textContent = ids.length + " KNOWN";
-
-  ids.forEach(id => {
-    const row = document.createElement("div");
-    row.className = "codex-entry";
-    row.innerHTML = `<span class="codex-icon">${iconMarkup(id)}</span>
-      <span><div class="codex-name">${escapeHtml(item(id).name)}</div>
-      <div class="codex-kind">${escapeHtml(item(id).kind)}${
-        count(id) ? " · Owned: " + count(id) : " · Not in inventory"
-      }</div></span>`;
-    root.appendChild(row);
-  });
-}
-
-function renderLog() {
-  const root = document.getElementById("logList");
-  root.innerHTML = "";
-
-  state.log.slice(0,8).forEach(entry => {
-    const el = document.createElement("span");
-    el.className = "log-entry";
-    el.textContent = entry;
-    root.appendChild(el);
-  });
-}
-
-function render() {
-  renderSources();
-  renderInventory();
-  renderReaction();
-  renderCodex();
-  renderLog();
-
-  const total = Object.values(state.inventory).reduce((a,b)=>a+b,0);
-  document.getElementById("resourceStat").textContent = total;
-  document.getElementById("discoveryStat").textContent = state.discovered.length;
-  document.getElementById("experimentCount").textContent = state.experiments + " EXPERIMENTS";
-  document.getElementById("stageLabel").textContent =
-    state.unlocked.includes("heat")
-      ? "STAGE 02 · TRANSFORMATION"
-      : "STAGE 01 · ORIGINS";
-
-  save();
-}
-
-document.getElementById("combineBtn").addEventListener("click",combine);
-
-document.getElementById("clearBtn").addEventListener("click",()=>{
-  selected = [];
-  render();
-  selectFeedback("Selection cleared.");
-});
-
-document.getElementById("resetBtn").addEventListener("click",()=>{
-  if (!confirm("Reset the Lab? All inventory, discoveries and progress will be lost.")) return;
-  state = freshState();
-  selected = [];
-  render();
-  selectFeedback("Lab reset. Begin again with Water and Stone.");
-});
-
-render();
+function resolveRecipe(a,b){const key=pairKey(a,b);if(RECIPES[key])return {...RECIPES[key],explicit:true};const r=semanticFallback(a,b);if(r.generated)return {...r,out:'derived_'+stableHash(key)+'_'+stableHash(key+'|hig-lab-v05'),explicit:false,sourcePair:key};return {...r,explicit:false}}
+function semanticShort(item){if(item.generated)return item.baseLabel||'derived material';return item.name}
+function materializeResult(aId,bId,res){if(!res.generated)return getItem(res.out);if(state.generatedItems[res.out])return state.generatedItems[res.out];const a=getItem(aId),b=getItem(bId);if(!a||!b)return null;const shortA=semanticShort(a),shortB=semanticShort(b);const families={
+ 'mineral-suspension':{suffix:'Mineral Suspension',base:'mineral suspension',icon:'🫗',phase:'slurry',tags:['mineral','aqueous','particulate'],moisture:.72,heat:.05,hardness:.05},
+ 'fused-mineral':{suffix:'Fused Mineral',base:'fused mineral',icon:'🔶',phase:'solid',tags:['mineral','fused','thermal'],moisture:0,heat:.45,hardness:.58},
+ 'thermal-mixture':{suffix:'Thermal Mixture',base:'thermal mixture',icon:'♨️',phase:'gas',tags:['gaseous','thermal','reactive'],moisture:.35,heat:.75,hardness:0},
+ 'thermal-residue':{suffix:'Thermal Residue',base:'thermal residue',icon:'🌑',phase:'solid',tags:['mineral','thermal-residue'],moisture:0,heat:.18,hardness:.3},
+ 'aerosol':{suffix:'Mineral Aerosol',base:'mineral aerosol',icon:'🌫️',phase:'aerosol',tags:['mineral','gaseous','particulate'],moisture:.1,heat:.05,hardness:0},
+ 'airborne-mineral':{suffix:'Airborne Mineral Matter',base:'airborne mineral matter',icon:'🌪️',phase:'aerosol',tags:['mineral','gaseous','particulate','mobile'],moisture:.02,heat:.05,hardness:0},
+ 'condensate':{suffix:'Condensate',base:'condensate',icon:'💧',phase:'aerosol',tags:['aqueous','gaseous'],moisture:.8,heat:.05,hardness:0},
+ 'thermal-plume':{suffix:'Thermal Plume',base:'thermal plume',icon:'♨️',phase:'gas',tags:['gaseous','thermal','force'],moisture:.05,heat:.8,hardness:0},
+ 'atmosphere':{suffix:'Gas Mixture',base:'gas mixture',icon:'🌪️',phase:'system',tags:['gaseous','force'],moisture:.2,heat:.2,hardness:0},
+ 'composite':{suffix:'Composite',base:'composite material',icon:'🔶',phase:'solid',tags:['mineral','composite','rigid'],moisture:.02,heat:.08,hardness:.55},
+ 'compacted-aggregate':{suffix:'Compacted Aggregate',base:'compacted aggregate',icon:'🪨',phase:'solid',tags:['mineral','granular','composite','rigid'],moisture:.03,heat:.02,hardness:.6},
+ 'fluid-mixture':{suffix:'Fluid Mixture',base:'fluid mixture',icon:'💧',phase:'liquid',tags:['aqueous','mobile'],moisture:.8,heat:.05,hardness:0}
+ };const f=families[res.family]||families.composite;const name=`${shortA}–${shortB} ${f.suffix}`;const level=Math.max(a.level||1,b.level||1)+1;const tags=[...new Set([...(a.tags||[]),...(b.tags||[]),...f.tags])];const item={id:res.out,name,icon:f.icon,kind:'Simulated material',level,phase:f.phase,tags,moisture:f.moisture,heat:Math.max(f.heat,a.heat||0,b.heat||0)*.85,hardness:f.hardness,description:`A rule-based lab result from combining ${a.name} with ${b.name}. ${res.why} This is a simulated material, not a claim that the exact product occurs in nature.`,baseLabel:f.base,generated:true,sourcePair:res.sourcePair};state.generatedItems[res.out]=item;return item}
+
+let state=loadState();let slots=[null,null];let lastOutput=null;let activeTab='inventory';let toastTimer;
+function freshState(){return {inventory:{},discovered:{},recipes:{},generatedItems:{},log:[{text:'Lab initialized. Four primordial sources available.',time:Date.now()}]}}
+function loadState(){try{const raw=localStorage.getItem(SAVE_KEY);if(raw){const parsed=JSON.parse(raw);return {...freshState(),...parsed,inventory:parsed.inventory||{},discovered:parsed.discovered||{},recipes:parsed.recipes||{},generatedItems:parsed.generatedItems||{},log:parsed.log||[]}}}catch(e){}return freshState()}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(e){notify('Could not save locally. Browser storage may be full.')}}
+function notify(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200)}
+function log(text){state.log.unshift({text,time:Date.now()});state.log=state.log.slice(0,30)}
+function addInventory(id,n=1){state.inventory[id]=(state.inventory[id]||0)+n;state.discovered[id]=true}
+function known(id){return !!ITEMS[id]||!!state.generatedItems[id]}
+function useSource(id){const slot=slots.findIndex(s=>!s);if(slot<0){notify('Both synthesis slots are occupied. Clear a slot first.');return}slots[slot]={id,source:true};renderSlots();}
+function chooseInventory(id){if((state.inventory[id]||0)<1){notify('No units available.');return}const slot=slots.findIndex(s=>!s);if(slot<0){notify('Both synthesis slots are occupied. Clear a slot first.');return}slots[slot]={id,source:false};renderSlots()}
+function removeSlot(i){slots[i]=null;renderSlots()}
+function renderSources(){document.getElementById('sourceList').innerHTML=['water','earth','fire','air'].map(id=>{const x=ITEMS[id];return `<button class="source" data-source="${id}"><span class="symbol">${x.icon}</span><span class="meta"><strong>${x.name}</strong><small>${x.kind}</small></span><span class="infinite">INFINITE</span></button>`}).join('');document.querySelectorAll('[data-source]').forEach(b=>b.addEventListener('click',()=>useSource(b.dataset.source)))}
+function renderSlots(){slots.forEach((s,i)=>{const el=document.getElementById('slot'+i);if(!s){el.className='slot';el.innerHTML='<span class="slot-symbol">＋</span><span class="slot-label">Choose input</span><span class="slot-origin">Source or inventory</span>';el.onclick=()=>{document.getElementById('inventorySearch').focus();notify('Choose a source on the left or a material in Inventory.')}}else{const x=getItem(s.id);el.className='slot filled';el.innerHTML=`<button class="remove" aria-label="Remove input">×</button><span class="slot-symbol">${x.icon}</span><span class="slot-label">${x.name}</span><span class="slot-origin">${s.source?'Infinite source':'Inventory unit'} · Level ${x.level||'—'}</span>`;el.querySelector('.remove').onclick=e=>{e.stopPropagation();removeSlot(i)};el.onclick=()=>removeSlot(i)}});document.getElementById('chamberMode').textContent=slots.every(Boolean)?'Inputs ready':'Awaiting inputs';document.getElementById('ruleStatus').textContent=slots.every(Boolean)?'Ready to resolve recipe':'Select two components'}
+function renderResult(item,why,explicit){const el=document.getElementById('resultBox');if(!item){el.className='result empty';el.textContent='Your synthesis result will appear here. Every pair has a deterministic outcome.';return}el.className='result';el.innerHTML=`<div class="result-head"><div class="result-symbol">${item.icon}</div><div><div class="result-type">${item.kind||'Derived material'} · Level ${item.level||'—'}</div><h3>${item.name}</h3></div></div><p>${item.description||why}</p><p class="recipe-line">${why}</p>`}
+function synthesize(){if(!slots[0]||!slots[1]){notify('Select two components first.');return}const a=slots[0],b=slots[1],ai=getItem(a.id),bi=getItem(b.id);if(!ai||!bi){notify('One input is no longer available.');return}if(!a.source&&(state.inventory[a.id]||0)<1||!b.source&&(state.inventory[b.id]||0)<1){notify('An inventory input is no longer available.');return}if(!a.source&&a.id===b.id&&!b.source&&(state.inventory[a.id]||0)<2){notify('You need two units of this material.');return}
+ const res=resolveRecipe(a.id,b.id),out=res.out;let item=materializeResult(a.id,b.id,res);if(!item){notify('Recipe engine returned an invalid result. Inputs were not consumed.');return}
+ // Only consume derived inventory inputs, and only after a valid result has been resolved.
+ if(!a.source)state.inventory[a.id]--;if(!b.source)state.inventory[b.id]--;
+ addInventory(out,1);const k=pairKey(a.id,b.id);const first=!state.recipes[k];state.recipes[k]={a:[a.id,b.id].sort()[0],b:[a.id,b.id].sort()[1],out,why:res.why,explicit:res.explicit,discoveredAt:Date.now()};
+ const recipeText=`${ai.name} + ${bi.name} → ${item.name}`;log(`${first?'Discovered':'Repeated'}: <span>${escapeHTML(recipeText)}</span>`);lastOutput=item;renderResult(item,res.why,res.explicit);document.getElementById('lastResult').textContent=first?'New recipe discovered':'Recipe reproduced';document.getElementById('ruleStatus').textContent=res.explicit?'Curated recipe':'Semantic property rule';slots=[null,null];save();renderAll();notify(first?`New discovery: ${item.name}`:`Synthesized ${item.name}`)}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderInventory(){const q=document.getElementById('inventorySearch').value.trim().toLowerCase();const rows=Object.entries(state.inventory).filter(([id,n])=>n>0&&known(id)).map(([id,n])=>({x:getItem(id),n})).filter(o=>!q||o.x.name.toLowerCase().includes(q)||o.x.kind.toLowerCase().includes(q)).sort((a,b)=>(a.x.level||1)-(b.x.level||1)||a.x.name.localeCompare(b.x.name));const el=document.getElementById('inventoryList');if(!rows.length){el.innerHTML='<div class="empty-state">No materials found.<br>Combine the primordial elements to begin.</div>'}else{el.innerHTML=rows.map(({x,n})=>`<button class="inv-item" data-inv="${x.id}"><span class="item-symbol">${x.icon}</span><span class="inv-info"><strong>${x.name}</strong><small>Level ${x.level||'—'} · ${x.kind}${x.generated?' · Simulated':''}</small></span><span class="qty">×${n}</span></button>`).join('');el.querySelectorAll('[data-inv]').forEach(b=>b.addEventListener('click',()=>chooseInventory(b.dataset.inv)))}const total=Object.values(state.inventory).reduce((s,n)=>s+Math.max(0,n),0);document.getElementById('itemCount').textContent=`${total} units · ${rows.length} materials`}
+function renderCodex(){const q=document.getElementById('codexSearch').value.trim().toLowerCase();const entries=Object.values(state.recipes).map(r=>({...r,ai:getItem(r.a),bi:getItem(r.b),outItem:getItem(r.out)})).filter(r=>r.ai&&r.bi&&r.outItem).filter(r=>!q||`${r.ai.name} ${r.bi.name} ${r.outItem.name} ${r.why}`.toLowerCase().includes(q)).sort((a,b)=>b.discoveredAt-a.discoveredAt);const el=document.getElementById('codexList');el.innerHTML=entries.length?entries.map(r=>`<div class="codex-entry"><strong>${r.outItem.icon} ${r.outItem.name}</strong><div class="recipe-line">${r.ai.name} + ${r.bi.name} → ${r.outItem.name}</div><p>${r.why}</p><span class="tag">${r.explicit?'Curated recipe':(r.outItem.generated?'Semantic simulation':'Property rule')}</span></div>`).join(''):'<div class="empty-state">No recipes recorded yet.<br>Your first synthesis will begin the Codex.</div>'}
+function renderLog(){document.getElementById('logList').innerHTML=state.log.slice(0,12).map(l=>`<div class="log-entry">${new Date(l.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} · ${l.text}</div>`).join('')}
+function renderAll(){renderSlots();renderInventory();renderCodex();renderLog();document.getElementById('discoveryCount').textContent=Object.keys(state.recipes).length}
+function switchTab(tab){activeTab=tab;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.getElementById('inventoryTab').classList.toggle('hidden',tab!=='inventory');document.getElementById('codexTab').classList.toggle('hidden',tab!=='codex')}
+function reset(){if(!confirm('Reset the lab and erase all locally saved discoveries? This cannot be undone.'))return;localStorage.removeItem(SAVE_KEY);state=freshState();slots=[null,null];lastOutput=null;renderResult(null);renderAll();notify('Lab reset.')}
+function exportSave(){const data={app:'HAD IT GONE: THE LAB',version:'0.5',exportedAt:new Date().toISOString(),state};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='had-it-gone-lab-save.json';a.click();URL.revokeObjectURL(url);notify('Save exported.')}
+document.getElementById('combineBtn').addEventListener('click',synthesize);document.getElementById('clearBtn').addEventListener('click',()=>{slots=[null,null];renderSlots()});document.getElementById('resetBtn').addEventListener('click',reset);document.getElementById('exportBtn').addEventListener('click',exportSave);document.getElementById('inventorySearch').addEventListener('input',renderInventory);document.getElementById('codexSearch').addEventListener('input',renderCodex);document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+// First-run starter stock: two units of each source let the player experiment immediately. Sources themselves remain infinite.
+if(!localStorage.getItem(SAVE_KEY)){for(const id of ['water','earth','fire','air'])addInventory(id,2);save()}
+renderSources();renderAll();
+})();
 </script>
-</body>
-</html>
+</body></html>
